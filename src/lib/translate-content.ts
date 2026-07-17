@@ -3,6 +3,8 @@ import { translateText, translateArray } from '@/lib/translate-api'
 import { routing } from '@/i18n/routing'
 import type { Locale } from '@/types'
 
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+
 interface SourceContent {
   id:             string
   language:       Locale
@@ -49,7 +51,10 @@ export async function translateContentToAllLocales(
   /* Run sequentially. Microsoft can absolutely handle parallel requests on the
      free tier, but sequential keeps the failure mode easier to reason about and
      gives us predictable rate-limit behaviour if quota ever gets tight. */
-  for (const target of targets) {
+  for (const [i, target] of targets.entries()) {
+    // Brief pause between locales so parallel field calls from the previous
+    // locale have cleared Microsoft Translator's per-second quota window.
+    if (i > 0) await sleep(800)
     try {
       const translated = await translateOne(source, target)
 

@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toggleContentStatus, deleteContent } from './actions'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 interface Item {
   id: string
@@ -36,6 +37,7 @@ const LANGUAGE_LABELS: Record<string, string> = {
 export default function ContentList({ items }: { items: Item[] }) {
   const router = useRouter()
   const [busy, setBusy] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null)
 
   const [search, setSearch]                 = useState('')
   const [selectedTypes, setSelectedTypes]   = useState<Set<string>>(new Set())
@@ -145,12 +147,13 @@ export default function ContentList({ items }: { items: Item[] }) {
     setBusy(null)
   }
 
-  async function handleDelete(id: string, title: string) {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return
-    setBusy(id)
-    await deleteContent(id)
+  async function confirmDelete() {
+    if (!deleteTarget) return
+    setBusy(deleteTarget.id)
+    await deleteContent(deleteTarget.id)
     router.refresh()
     setBusy(null)
+    setDeleteTarget(null)
   }
 
   function formatDate(dateString: string) {
@@ -339,8 +342,20 @@ export default function ContentList({ items }: { items: Item[] }) {
                       </td>
                       <td style={{ ...tdStyle, textAlign: 'right' }}>
                         <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
+                          <Link
+                            href={`/${item.language ?? 'en'}/preview/${item.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={iconBtn}
+                            title="Preview"
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                              <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                          </Link>
                           <Link href={`/admin/content/${item.id}`} style={iconBtn} title="Edit">✎</Link>
-                          <button onClick={() => handleDelete(item.id, item.title)} disabled={isBusy}
+                          <button onClick={() => setDeleteTarget({ id: item.id, title: item.title })} disabled={isBusy}
                             style={{ ...iconBtn, color: 'var(--danger-fg)' }} title="Delete">×</button>
                         </div>
                       </td>
@@ -352,6 +367,17 @@ export default function ContentList({ items }: { items: Item[] }) {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        open={!!deleteTarget}
+        title="Delete content"
+        message={`Delete "${deleteTarget?.title}"? This cannot be undone.`}
+        confirmLabel="Delete"
+        danger
+        busy={busy === deleteTarget?.id}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }

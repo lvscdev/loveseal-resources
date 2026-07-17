@@ -24,10 +24,10 @@ export default function PublicFooter() {
       <div
         className="footer-inner"
         style={{
-          /* No max-width: footer spans full viewport, padding from the
-             shared --page-inline-padding token (aligns with header + hero
-             + Latest sections). Vertical padding stays generous. */
-          padding:  '3.5rem var(--page-inline-padding) 2rem',
+          maxWidth:     'var(--width-site)',
+          marginInline: 'auto',
+          width:        '100%',
+          padding:      '3.5rem var(--page-inline-padding) 2rem',
         }}
       >
         {/* ─── TOP ROW: 4 columns (1 display + 3 nav) ───────────────────
@@ -196,22 +196,19 @@ export default function PublicFooter() {
                   rel="noopener noreferrer"
                   aria-label={s.name}
                   className="footer-social"
-                  /* Brand color is staged on CSS custom properties so the
-                     shared `:hover` rule below can apply it without per-
-                     platform classes. Cast via React.CSSProperties to
-                     accept custom properties on inline style. */
                   style={{
-                    display:        'inline-flex',
-                    alignItems:     'center',
-                    justifyContent: 'center',
-                    width:          '2.25rem',
-                    height:         '2.25rem',
-                    color:          'var(--footer-text)',
-                    background:     'transparent',
-                    textDecoration: 'none',
-                    transition:     'background-color 0.18s, background-image 0.18s',
-                    ['--hover-bg' as string]:       s.background ?? 'transparent',
-                    ['--hover-bg-image' as string]: s.gradient   ?? 'none',
+                    display:         'inline-flex',
+                    alignItems:      'center',
+                    justifyContent:  'center',
+                    width:           '2.25rem',
+                    height:          '2.25rem',
+                    borderRadius:    '50%',
+                    color:           '#FFFFFF',
+                    background:      s.background ?? 'rgba(255,255,255,0.15)',
+                    backgroundImage: s.gradient,
+                    textDecoration:  'none',
+                    flexShrink:      0,
+                    transition:      'opacity 0.18s, transform 0.12s',
                   } as React.CSSProperties}
                 >
                   <SocialIcon name={s.icon} size={18} />
@@ -239,12 +236,11 @@ export default function PublicFooter() {
 
       {/* Responsive layout + social hover ─────────────────────────────── */}
       <style>{`
-        /* Social icon hover — reveal the brand color staged on the
-           --hover-bg / --hover-bg-image custom properties. Default state
-           is transparent white-glyph; hover restores the brand identity. */
+        /* Social icon hover — slight opacity lift so the always-visible
+           brand circle dims subtly on hover, indicating interactivity. */
         .footer-social:hover {
-          background-color: var(--hover-bg);
-          background-image: var(--hover-bg-image);
+          opacity: 0.85;
+          transform: translateY(-1px);
         }
 
         /* Link hover — lighten muted footer links toward full white. */

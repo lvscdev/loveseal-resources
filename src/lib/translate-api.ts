@@ -33,6 +33,25 @@ function getCreds(): { key: string; region: string } {
   return { key, region }
 }
 
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+
+/* Retry a fetch call up to `attempts` times, backing off on 429. */
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit,
+  attempts = 4,
+): Promise<Response> {
+  let delay = 1000
+  for (let i = 0; i < attempts; i++) {
+    const res = await fetch(url, init)
+    if (res.status !== 429) return res
+    if (i < attempts - 1) await sleep(delay)
+    delay *= 2
+  }
+  // Last attempt — return whatever we get
+  return fetch(url, init)
+}
+
 /**
  * Translate a single string into the target locale.
  * Returns '' for empty/whitespace input. Throws on API error.
@@ -58,7 +77,7 @@ export async function translateText(
 
   const url = `${ENDPOINT_BASE}?${params.toString()}`
 
-  const res = await fetch(url, {
+  const res = await fetchWithRetry(url, {
     method: 'POST',
     headers: {
       'Ocp-Apim-Subscription-Key':    key,
@@ -111,7 +130,7 @@ export async function translateArray(
 
   const url = `${ENDPOINT_BASE}?${params.toString()}`
 
-  const res = await fetch(url, {
+  const res = await fetchWithRetry(url, {
     method: 'POST',
     headers: {
       'Ocp-Apim-Subscription-Key':    key,

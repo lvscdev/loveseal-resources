@@ -66,6 +66,29 @@
   cursor: not-allowed;
 }
 
+.lr-editor-toolbar select {
+  height: 28px;
+  padding: 0 4px;
+  background: transparent;
+  border: 0.5px solid var(--border-subtle);
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  transition: background 0.12s, color 0.12s;
+}
+
+.lr-editor-toolbar select:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.lr-editor-toolbar select:focus {
+  outline: none;
+  border-color: var(--brand-gold);
+}
+
 .lr-editor-toolbar .toolbar-divider {
   width: 1px;
   height: 18px;

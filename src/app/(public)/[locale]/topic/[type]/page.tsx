@@ -26,8 +26,9 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   const typeName = tNav(typeNavKey(type))
 
   return {
-    title:      `${typeName} — ${tTopic('eyebrow.type')}`,
-    alternates: metadataAlternates(locale, `/topic/${type}`),
+    title:       `${typeName} — ${tTopic('eyebrow.type')}`,
+    description: tTopic('typeBody', { type: typeName.toLowerCase() }),
+    alternates:  metadataAlternates(locale, `/topic/${type}`),
   }
 }
 
@@ -45,12 +46,12 @@ export default async function TopicTypePage({ params }: PageParams) {
   const { data } = await supabase
     .from('content')
     .select(`
-      id, title, content_type, theme, speaker, series,
-      date_preached, cover_image_url, summary_points, created_at
+      id, slug, title, content_type, theme, speaker, series,
+      date_preached, cover_image_url, summary_points, published_at
     `)
     .eq('status', 'published')
     .eq('content_type', type)
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false })
 
   const items = (data ?? []) as Parameters<typeof TopicGrid>[0]['items']
 

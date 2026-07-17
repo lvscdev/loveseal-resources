@@ -85,12 +85,12 @@ export async function getContentByAuthor(
   let query = supabase
     .from('content')
     .select(`
-      id, title, content_type, theme, speaker, series,
-      date_preached, cover_image_url, summary_points, created_at
+      id, slug, title, content_type, theme, speaker, series,
+      date_preached, cover_image_url, summary_points, published_at
     `)
     .eq('status', 'published')
     .eq('author_id', authorId)
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false })
 
   if (contentType !== 'all') {
     query = query.eq('content_type', contentType)
@@ -99,6 +99,7 @@ export async function getContentByAuthor(
   const { data } = await query
   return (data ?? []) as Array<{
     id:              string
+    slug:            string | null
     title:           string
     content_type:    'manual' | 'prophecy' | 'article' | 'blog'
     theme:           string | null
@@ -107,7 +108,7 @@ export async function getContentByAuthor(
     date_preached:   string | null
     cover_image_url: string | null
     summary_points:  string[] | null
-    created_at:      string
+    published_at:    string
   }>
 }
 

@@ -1,6 +1,6 @@
 {
   "brand": {
-    "byline": "por LoveSeal Church",
+    "byline": "de LoveSeal Church",
     "shortName": "Lively Resources",
     "parent": "LoveSeal Church"
   },
@@ -13,41 +13,45 @@
     "description": "Manuales, profecías, artículos y blog de LoveSeal Church."
   },
   "nav": {
-    "home": "Início",
+    "home": "Inicio",
     "whatsNew": "Novedades",
-    "all": "Tudo",
-    "manuals": "Manuais",
-    "prophecies": "Profecias",
-    "articles": "Artigos",
+    "all": "Todo",
+    "manuals": "Manuales",
+    "prophecies": "Profecías",
+    "articles": "Artículos",
     "blog": "Blog",
-    "search": "Buscar conteúdo",
-    "menu": "Abrir menu",
-    "close": "Fechar",
-    "signin": "Entrar"
+    "search": "Buscar contenido",
+    "menu": "Abrir menú",
+    "close": "Cerrar",
+    "signin": "Iniciar sesión"
   },
   "hero": {
-    "viewAllLatest": "Ver todos os mais recentes",
-    "drag": "arrastar",
-    "empty": "Nenhum conteúdo publicado ainda. Volte em breve.",
+    "viewAllLatest": "Ver lo más reciente",
+    "drag": "arrastra",
+    "empty": "Aún no hay contenido publicado. Vuelve pronto.",
     "peace": {
       "line1": "La paz",
-      "line2": "sea contigo.",
-      "subline": "Esto es lo que se mueve hoy en el cuerpo de Cristo — y lo que llevar a tu lugar de oración."
+      "line2a": "sea contigo.",
+      "line2b": "",
+      "subline": "Esto es lo que está moviéndose hoy en el cuerpo de Cristo — y lo que puedes llevar a tu lugar de oración."
     }
   },
   "featured": {
-    "title": "Em destaque esta semana",
-    "allContent": "Todo o conteúdo"
+    "title": "Destacados de esta semana",
+    "allContent": "Todo el contenido",
+    "handpicked": "Seleccionado por el equipo editorial",
+    "chapters": "{count, plural, =1 {1 capítulo} other {# capítulos}}",
+    "readTime": "{count, plural, =1 {1 min de lectura} other {# min de lectura}}"
   },
   "about": {
-    "eyebrow": "Sobre",
-    "headline": "Uma biblioteca de <highlight>verdade</highlight>, apresentada de forma simples para cada estação de fé.",
-    "body": "De {parent} — manuais sobre discipulado, palavras proféticas para o corpo de Cristo, artigos sobre fé e vida, e um blog constante de ensino. Cada palavra compartilhável, em qualquer idioma, em qualquer dispositivo.",
+    "eyebrow": "Sobre nosotros",
+    "headline": "Una biblioteca de <highlight>verdad</highlight>, presentada con sencillez para cada temporada de fe.",
+    "body": "De {parent} — manuales sobre el discipulado, palabras proféticas para el cuerpo de Cristo, artículos sobre la fe y la vida, y un blog constante de enseñanza. Cada palabra hecha para compartirse, en cualquier idioma y en cualquier dispositivo.",
     "stats": {
-      "types": "Tipos de conteúdo",
+      "types": "Tipos de contenido",
       "languages": "Idiomas",
-      "readable": "Legível",
-      "cost": "Custo de acesso"
+      "readable": "Legible",
+      "cost": "Costo de acceso"
     }
   },
   "sections": {
@@ -56,7 +60,8 @@
     "articles": "Artículos",
     "blog": "Blog",
     "viewAll": "Ver todo",
-    "latest": "{type} recientes",
+    "latest": "Lo más reciente: {type}",
+    "entries": "{count, plural, =0 {sin entradas} =1 {1 entrada} other {# entradas}}",
     "inFocus": {
       "label": "En foco esta semana"
     },
@@ -64,26 +69,27 @@
   },
   "library": {
     "eyebrow": "Biblioteca",
-    "title": "Todo o conteúdo",
-    "itemsCount": "{count, plural, =0 {sem itens} =1 {1 item} other {# itens}} disponíveis"
+    "title": "Todo el contenido",
+    "itemsCount": "{count, plural, =0 {ningún elemento} =1 {1 elemento} other {# elementos}} disponible(s)",
+    "body": "Manuales, profecías, artículos y publicaciones de LoveSeal Church — una biblioteca viva para el Cuerpo de Cristo."
   },
   "filters": {
     "title": "Filtros",
-    "search": "Buscar título, tema, escritura…",
+    "search": "Buscar por título, tema, escritura…",
     "type": "Tipo",
     "theme": "Tema",
     "speaker": "Orador",
-    "series": "Série",
-    "clearAll": "Limpar tudo",
-    "showCount": "Mostrar {count, plural, =0 {sem itens} =1 {1 item} other {# itens}}",
-    "noMatches": "Nenhum conteúdo corresponde aos filtros atuais",
-    "noContent": "Nenhum conteúdo publicado ainda",
-    "uploadFirst": "Enviar primeiro item"
+    "series": "Serie",
+    "clearAll": "Borrar todo",
+    "showCount": "Mostrar {count, plural, =0 {ningún elemento} =1 {1 elemento} other {# elementos}}",
+    "noMatches": "Ningún contenido coincide con los filtros actuales",
+    "noContent": "Aún no hay contenido publicado",
+    "uploadFirst": "Sube el primer elemento"
   },
   "results": {
     "showing": "Mostrando",
     "of": "de",
-    "items": "{count, plural, =0 {itens} =1 {item} other {itens}}"
+    "items": "{count, plural, =0 {elementos} =1 {elemento} other {elementos}}"
   },
   "card": {
     "viewLabel": "Ver"
@@ -91,97 +97,117 @@
   "content": {
     "types": {
       "manual": "Manual",
-      "prophecy": "Profecia",
-      "article": "Artigo",
+      "prophecy": "Profecía",
+      "article": "Artículo",
       "blog": "Blog"
     },
-    "lesson": "Lição {number}",
-    "minRead": "{count} min de leitura",
-    "share": "Compartilhar",
-    "copyLink": "Copiar link",
-    "linkCopied": "Link copiado",
+    "lesson": "Lección {number}",
+    "minRead": "{count} min de lectura",
+    "share": "Compartir",
+    "copyLink": "Copiar enlace",
+    "linkCopied": "Enlace copiado",
     "copied": "Copiado",
-    "downloadPdf": "Baixar PDF",
+    "downloadPdf": "Descargar PDF",
     "fullText": "Texto completo",
-    "keyPoints": "Pontos-chave",
-    "pdfViewer": "Visualizador de PDF",
-    "plainText": "Texto simples",
-    "scriptureRefs": "Referências bíblicas",
+    "keyPoints": "Puntos clave",
+    "pdfViewer": "Visor de PDF",
+    "plainText": "Texto sin formato",
+    "scriptureRefs": "Referencias bíblicas",
     "tags": "Etiquetas",
-    "attachments": "Anexos",
-    "backToAll": "← Voltar a todo o conteúdo",
-    "pdfUnavailable": "O PDF está indisponível no momento.",
+    "attachments": "Archivos adjuntos",
+    "backToAll": "← Volver a todo el contenido",
+    "pdfUnavailable": "El texto de este documento aún no está disponible.",
     "breadcrumb": {
-      "home": "Início",
-      "content": "Conteúdo"
+      "home": "Inicio",
+      "content": "Contenido"
     },
-    "translatedNotice": "Esta página foi traduzida automaticamente. Algumas nuances podem ser perdidas.",
-    "pendingTranslationNotice": "Este conteúdo é exibido no idioma original ({source}). Ainda não há tradução disponível."
+    "translatedNotice": "Esta página fue traducida automáticamente. Algunos matices pueden perderse.",
+    "pendingTranslationNotice": "Este contenido se muestra en su idioma original ({source}). Aún no hay una traducción disponible.",
+    "reader": {
+      "breadcrumb": {
+        "topics": "Temas"
+      },
+      "toggleFull": "Texto completo",
+      "toggleQuick": "Puntos clave",
+      "byline": {
+        "readTime": "{minutes} min de lectura"
+      },
+      "actions": {
+        "copyLink": "Copiar enlace",
+        "copied": "Copiado",
+        "share": "Compartir",
+        "downloadPdf": "Descargar PDF"
+      },
+      "quick": {
+        "pagination": "{current} de {total}",
+        "next": "Siguiente",
+        "prev": "Anterior",
+        "readFull": "Leer texto completo",
+        "pointFallback": "Punto {n}"
+      },
+      "related": {
+        "eyebrow": "Relacionado",
+        "heading": "También te puede interesar"
+      }
+    }
   },
   "topic": {
-    "_todo_translation": true,
     "eyebrow": {
-      "type": "Topic"
+      "type": "Tema"
     },
-    "typeBody": "Every published {type} in the library, newest first.",
-    "emptyType": "No {type} content yet. Check back soon."
+    "typeBody": "Todo el {type} publicado en la biblioteca, lo más reciente primero.",
+    "emptyType": "Aún no hay contenido de {type}. Vuelve pronto."
   },
   "topics": {
-    "_todo_translation": true,
-    "eyebrow": "Browse",
-    "title": "Topics",
-    "body": "Every tag and theme used across the library. Tap one to see all the manuals, prophecies, articles, and blog posts that touch it.",
-    "tagEyebrow": "Topic",
-    "tagBody": "Everything tagged #{tag} across the library, newest first.",
-    "tagsCount": "{count, plural, =0 {no topics yet} =1 {1 topic} other {# topics}}",
-    "itemsCount": "{count, plural, =0 {no items} =1 {1 item} other {# items}}",
-    "empty": "No topics yet. Once content is published with tags, they'll appear here.",
-    "emptyTag": "No content tagged #{tag} yet."
+    "eyebrow": "Explorar",
+    "title": "Temas",
+    "body": "Todas las etiquetas y temas que se usan en la biblioteca. Toca uno para ver los manuales, profecías, artículos y publicaciones que lo tocan.",
+    "tagEyebrow": "Tema",
+    "tagBody": "Todo lo etiquetado con #{tag} en la biblioteca, lo más reciente primero.",
+    "tagsCount": "{count, plural, =0 {aún no hay temas} =1 {1 tema} other {# temas}}",
+    "itemsCount": "{count, plural, =0 {ningún elemento} =1 {1 elemento} other {# elementos}}",
+    "empty": "Aún no hay temas. Cuando se publique contenido con etiquetas, aparecerán aquí.",
+    "emptyTag": "Aún no hay contenido con la etiqueta #{tag}."
   },
   "authors": {
-    "_todo_translation": true,
-    "eyebrow": "Author",
-    "indexTitle": "Authors",
-    "indexBody": "Speakers and writers behind the manuals, prophecies, articles, and blog posts. Tap a name to see everything they've contributed.",
-    "authorsCount": "{count, plural, =0 {no authors yet} =1 {1 author} other {# authors}}",
-    "itemsCount": "{count, plural, =0 {no items} =1 {1 item} other {# items}}",
-    "empty": "No authors yet. Once content is published with attributed authors, they'll appear here.",
-    "emptyForAuthor": "{name} hasn't published anything in this category yet.",
-    "profileFallbackBody": "Content by {name}"
+    "eyebrow": "Autor",
+    "indexTitle": "Autores",
+    "indexBody": "Los oradores y autores detrás de los manuales, profecías, artículos y publicaciones del blog. Toca un nombre para ver todo lo que ha aportado.",
+    "authorsCount": "{count, plural, =0 {aún no hay autores} =1 {1 autor} other {# autores}}",
+    "itemsCount": "{count, plural, =0 {ningún elemento} =1 {1 elemento} other {# elementos}}",
+    "empty": "Aún no hay autores. Cuando se publique contenido con autores atribuidos, aparecerán aquí.",
+    "emptyForAuthor": "{name} aún no ha publicado nada en esta categoría.",
+    "profileFallbackBody": "Contenido de {name}"
   },
   "notFound": {
     "label": "404",
-    "title": "Conteúdo não encontrado",
-    "body": "O conteúdo que você procura pode ter sido removido ou despublicado.",
-    "browse": "Explorar todo o conteúdo",
+    "title": "Contenido no encontrado",
+    "body": "El contenido que buscas puede haber sido eliminado o despublicado.",
+    "browse": "Ver todo el contenido",
     "root": {
-      "_todo_translation": true,
       "label": "404",
-      "title": "Page not found",
-      "body": "The page you're looking for doesn't exist or has been moved.",
-      "home": "Go home",
-      "browse": "Browse the library"
+      "title": "Página no encontrada",
+      "body": "La página que buscas no existe o fue movida.",
+      "home": "Ir al inicio",
+      "browse": "Explorar la biblioteca"
     },
     "topic": {
-      "_todo_translation": true,
       "label": "404",
-      "title": "Topic not found",
-      "body": "That isn't one of our content types. Try manuals, prophecies, articles, or blog.",
-      "browse": "Browse all content"
+      "title": "Tema no encontrado",
+      "body": "Ese no es uno de nuestros tipos de contenido. Prueba con manuales, profecías, artículos o blog.",
+      "browse": "Ver todo el contenido"
     },
     "tag": {
-      "_todo_translation": true,
       "label": "404",
-      "title": "Topic not found",
-      "body": "We couldn't find anything tagged with that. The tag may have been removed, or no content uses it yet.",
-      "browse": "All topics"
+      "title": "Tema no encontrado",
+      "body": "No encontramos nada con esa etiqueta. Puede que la hayan eliminado, o que aún no haya contenido que la use.",
+      "browse": "Todos los temas"
     },
     "author": {
-      "_todo_translation": true,
       "label": "404",
-      "title": "Author not found",
-      "body": "We couldn't find an author at that link. They may have been removed, or the URL might be mistyped.",
-      "browse": "All authors"
+      "title": "Autor no encontrado",
+      "body": "No encontramos a un autor en ese enlace. Puede que lo hayan eliminado, o que la URL esté mal escrita.",
+      "browse": "Todos los autores"
     }
   },
   "footer": {
@@ -191,20 +217,20 @@
       "share": "Comparte.",
       "multiply": "Multiplica."
     },
-    "tagline": "Cada manual, profecía, artículo y publicación se puede compartir con un solo toque. Envía la verdad a quien la necesite — en cinco idiomas, en cualquier dispositivo, con o sin conexión.",
+    "tagline": "Cada manual, profecía, artículo y publicación se comparte con un toque. Lleva la verdad a quien la necesite — en cinco idiomas, en cualquier dispositivo, con o sin conexión.",
     "cta": {
       "browse": "Explorar la biblioteca"
     },
     "subscribe": {
       "button": "Suscríbete por correo",
       "placeholder": "tu@correo.com",
-      "submit": "Suscribirse",
-      "success": "Gracias — estaremos en contacto."
+      "submit": "Suscribirme",
+      "success": "Gracias — pronto sabrás de nosotros."
     },
     "columns": {
       "content": "Contenido",
-      "browse": "Navegar",
-      "about": "Acerca"
+      "browse": "Explorar",
+      "about": "Sobre nosotros"
     },
     "links": {
       "manuals": "Manuales",
@@ -212,7 +238,7 @@
       "articles": "Artículos",
       "blog": "Blog",
       "allContent": "Todo el contenido",
-      "latest": "Recientes",
+      "latest": "Lo más reciente",
       "topics": "Temas",
       "authors": "Autores",
       "loveseal": "LoveSeal Church",
@@ -226,11 +252,11 @@
   },
   "languageSwitcher": {
     "label": "Idioma",
-    "current": "Idioma atual"
+    "current": "Idioma actual"
   },
   "offline": {
     "eyebrow": "Sin conexión",
     "title": "Estás sin conexión",
-    "body": "Comprueba tu conexión a internet e inténtalo de nuevo. Las páginas que ya has leído deberían seguir disponibles."
+    "body": "Revisa tu conexión a Internet e inténtalo de nuevo. Las páginas que ya leíste deberían seguir disponibles."
   }
 }

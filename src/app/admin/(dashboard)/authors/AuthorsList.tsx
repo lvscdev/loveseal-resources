@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { deleteAuthor } from './actions'
 import InitialsAvatar from '@/components/reader/InitialsAvatar'
+import ButtonSpinner from '@/components/ui/ButtonSpinner'
+import { toast } from '@/lib/toast'
 
 interface AuthorRow {
   id:            string
@@ -20,19 +22,22 @@ export default function AuthorsList({ authors }: { authors: AuthorRow[] }) {
   const router = useRouter()
   const [, startTransition] = useTransition()
   const [confirmId, setConfirmId] = useState<string | null>(null)
-  const [error,     setError]     = useState<string | null>(null)
   const [busyId,    setBusyId]    = useState<string | null>(null)
 
-  function onDelete(id: string) {
-    setError(null)
+  function onDelete(id: string, name: string) {
     setBusyId(id)
     startTransition(async () => {
       const result = await deleteAuthor(id)
       setBusyId(null)
       if (!result.ok) {
-        setError(result.error ?? 'Delete failed')
+        toast.error('Delete failed', {
+          description: result.error ?? 'Please try again.',
+        })
         return
       }
+      toast.success('Author deleted', {
+        description: `"${name}" has been removed.`,
+      })
       setConfirmId(null)
       router.refresh()
     })
@@ -41,13 +46,13 @@ export default function AuthorsList({ authors }: { authors: AuthorRow[] }) {
   if (authors.length === 0) {
     return (
       <div style={{
-        padding:      '40px 16px',
+        padding:      '2.5rem 1rem',
         textAlign:    'center',
         background:   'var(--bg-raised)',
-        border:       '0.5px solid var(--border-subtle)',
-        borderRadius: '8px',
+        border:       '0.03125rem solid var(--border-subtle)',
+        borderRadius: '0.5rem',
         color:        'var(--text-tertiary)',
-        fontSize:     '14px',
+        fontSize:     '0.875rem',
       }}>
         No authors yet. Create one to get started.
       </div>
@@ -56,38 +61,25 @@ export default function AuthorsList({ authors }: { authors: AuthorRow[] }) {
 
   return (
     <div>
-      {error && (
-        <div style={{
-          padding:      '10px 12px',
-          marginBottom: '16px',
-          background:   'var(--bg-danger-soft, #FDE8E8)',
-          border:       '0.5px solid var(--border-danger, #F5A3A3)',
-          borderRadius: '7px',
-          color:        'var(--text-danger, #B91C1C)',
-          fontSize:     '13px',
-        }}>
-          {error}
-        </div>
-      )}
-
       <div style={{
         background:   'var(--bg-raised)',
-        border:       '0.5px solid var(--border-subtle)',
-        borderRadius: '8px',
+        border:       '0.03125rem solid var(--border-subtle)',
+        borderRadius: '0.5rem',
         overflow:     'hidden',
       }}>
         {authors.map((author, idx) => {
           const isLast = idx === authors.length - 1
+          const isBusy = busyId === author.id
           return (
             <div
               key={author.id}
               style={{
                 display:    'grid',
                 gridTemplateColumns: 'auto 1fr auto auto',
-                gap:        '14px',
+                gap:        '0.875rem',
                 alignItems: 'center',
-                padding:    '14px 16px',
-                borderBottom: isLast ? 'none' : '0.5px solid var(--border-subtle)',
+                padding:    '0.875rem 1rem',
+                borderBottom: isLast ? 'none' : '0.03125rem solid var(--border-subtle)',
               }}
             >
               <InitialsAvatar
@@ -98,7 +90,7 @@ export default function AuthorsList({ authors }: { authors: AuthorRow[] }) {
 
               <div style={{ minWidth: 0 }}>
                 <div style={{
-                  fontSize:      '14px',
+                  fontSize:      '0.875rem',
                   fontWeight:    500,
                   color:         'var(--text-primary)',
                   fontFamily:    'var(--font-body)',
@@ -109,9 +101,9 @@ export default function AuthorsList({ authors }: { authors: AuthorRow[] }) {
                   {author.name}
                 </div>
                 <div style={{
-                  fontSize:   '12px',
+                  fontSize:   '0.75rem',
                   color:      'var(--text-tertiary)',
-                  marginTop:  '2px',
+                  marginTop:  '0.125rem',
                   fontFamily: 'var(--font-body)',
                 }}>
                   /{author.slug} · {author.content_count} {author.content_count === 1 ? 'item' : 'items'}
@@ -121,12 +113,12 @@ export default function AuthorsList({ authors }: { authors: AuthorRow[] }) {
               <Link
                 href={`/admin/authors/${author.id}`}
                 style={{
-                  fontSize:       '13px',
+                  fontSize:       '0.8125rem',
                   color:          'var(--text-secondary)',
                   textDecoration: 'none',
-                  padding:        '6px 10px',
-                  borderRadius:   '6px',
-                  border:         '0.5px solid var(--border-subtle)',
+                  padding:        '0.375rem 0.625rem',
+                  borderRadius:   '0.375rem',
+                  border:         '0.03125rem solid var(--border-subtle)',
                   fontFamily:     'var(--font-body)',
                 }}
               >
@@ -134,34 +126,40 @@ export default function AuthorsList({ authors }: { authors: AuthorRow[] }) {
               </Link>
 
               {confirmId === author.id ? (
-                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '0.375rem', alignItems: 'center' }}>
                   <button
                     type="button"
-                    onClick={() => onDelete(author.id)}
-                    disabled={busyId === author.id}
+                    onClick={() => onDelete(author.id, author.name)}
+                    disabled={isBusy}
                     style={{
-                      fontSize:    '12px',
+                      fontSize:    '0.75rem',
                       color:       '#FFFFFF',
                       background:  'var(--text-danger, #B91C1C)',
                       border:      'none',
-                      padding:     '6px 10px',
-                      borderRadius: '6px',
-                      cursor:      busyId === author.id ? 'wait' : 'pointer',
+                      padding:     '0.375rem 0.625rem',
+                      borderRadius: '0.375rem',
+                      cursor:      isBusy ? 'wait' : 'pointer',
                       fontFamily:  'var(--font-body)',
+                      display:     'inline-flex',
+                      alignItems:  'center',
+                      justifyContent: 'center',
+                      minHeight:   '1.75rem',
+                      minWidth:    '4.5rem',
                     }}
                   >
-                    {busyId === author.id ? 'Deleting…' : 'Confirm'}
+                    {isBusy ? <ButtonSpinner label="Deleting…" inverse /> : 'Confirm'}
                   </button>
                   <button
                     type="button"
                     onClick={() => setConfirmId(null)}
+                    disabled={isBusy}
                     style={{
-                      fontSize:    '12px',
+                      fontSize:    '0.75rem',
                       color:       'var(--text-tertiary)',
                       background:  'transparent',
-                      border:      '0.5px solid var(--border-subtle)',
-                      padding:     '6px 10px',
-                      borderRadius: '6px',
+                      border:      '0.03125rem solid var(--border-subtle)',
+                      padding:     '0.375rem 0.625rem',
+                      borderRadius: '0.375rem',
                       cursor:      'pointer',
                       fontFamily:  'var(--font-body)',
                     }}
@@ -174,12 +172,12 @@ export default function AuthorsList({ authors }: { authors: AuthorRow[] }) {
                   type="button"
                   onClick={() => setConfirmId(author.id)}
                   style={{
-                    fontSize:    '13px',
+                    fontSize:    '0.8125rem',
                     color:       'var(--text-tertiary)',
                     background:  'transparent',
-                    border:      '0.5px solid var(--border-subtle)',
-                    padding:     '6px 10px',
-                    borderRadius: '6px',
+                    border:      '0.03125rem solid var(--border-subtle)',
+                    padding:     '0.375rem 0.625rem',
+                    borderRadius: '0.375rem',
                     cursor:      'pointer',
                     fontFamily:  'var(--font-body)',
                   }}

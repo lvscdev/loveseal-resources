@@ -1,20 +1,26 @@
 'use client'
 
 import { type Editor } from '@tiptap/react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { uploadEditorImage } from './upload-image'
+import { toast } from '@/lib/toast'
+import PromptModal from '@/components/ui/PromptModal'
 
 export function EditorToolbar({ editor }: { editor: Editor }) {
   const fileRef = useRef<HTMLInputElement>(null)
+  const [linkPromptOpen, setLinkPromptOpen] = useState(false)
+  const [scripturePromptOpen, setScripturePromptOpen] = useState(false)
 
   if (!editor) return null
 
   function handleLink() {
-    const previousUrl = editor.getAttributes('link').href
-    const url = window.prompt('Link URL', previousUrl ?? '')
+    setLinkPromptOpen(true)
+  }
 
-    if (url === null) return                             // cancelled
-    if (url === '') {                                    // cleared
+  function submitLink(values: Record<string, string>) {
+    setLinkPromptOpen(false)
+    const url = values.url.trim()
+    if (!url) {                                           // cleared
       editor.chain().focus().extendMarkRange('link').unsetLink().run()
       return
     }
@@ -22,10 +28,15 @@ export function EditorToolbar({ editor }: { editor: Editor }) {
   }
 
   function handleScripture() {
-    const reference = window.prompt('Scripture reference (e.g. Matthew 16:24)')
-    if (!reference) return
-    const text = window.prompt('Scripture text (optional — paste the verse here)') ?? ''
-    editor.chain().focus().setScripture({ reference: reference.trim(), text: text.trim() }).run()
+    setScripturePromptOpen(true)
+  }
+
+  function submitScripture(values: Record<string, string>) {
+    setScripturePromptOpen(false)
+    editor.chain().focus().setScripture({
+      reference: values.reference.trim(),
+      text: (values.text ?? '').trim(),
+    }).run()
   }
 
   async function handleImageInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -37,7 +48,7 @@ export function EditorToolbar({ editor }: { editor: Editor }) {
       const url = await uploadEditorImage(file)
       editor.chain().focus().setImage({ src: url, alt: file.name }).run()
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Image upload failed')
+      toast.error(err instanceof Error ? err.message : 'Image upload failed')
     }
   }
 
@@ -70,6 +81,12 @@ export function EditorToolbar({ editor }: { editor: Editor }) {
       >
         <strong style={{ fontSize: '11px' }}>H3</strong>
       </ToolbarBtn>
+
+      <Divider />
+
+      {/* Typography */}
+      <FontSizeSelect editor={editor} />
+      <LineHeightSelect editor={editor} />
 
       <Divider />
 
@@ -197,6 +214,28 @@ export function EditorToolbar({ editor }: { editor: Editor }) {
         style={{ display: 'none' }}
       />
 
+      <PromptModal
+        open={linkPromptOpen}
+        title="Insert link"
+        fields={[{ name: 'url', label: 'Link URL', placeholder: 'https://…' }]}
+        initialValues={{ url: editor.getAttributes('link').href ?? '' }}
+        submitLabel="Insert"
+        onSubmit={submitLink}
+        onCancel={() => setLinkPromptOpen(false)}
+      />
+
+      <PromptModal
+        open={scripturePromptOpen}
+        title="Insert scripture"
+        fields={[
+          { name: 'reference', label: 'Scripture reference', placeholder: 'e.g. Matthew 16:24', required: true },
+          { name: 'text', label: 'Scripture text (optional)', placeholder: 'Paste the verse here', multiline: true },
+        ]}
+        submitLabel="Insert"
+        onSubmit={submitScripture}
+        onCancel={() => setScripturePromptOpen(false)}
+      />
+
       <Divider />
 
       {/* Undo / redo */}
@@ -242,4 +281,51 @@ function ToolbarBtn({
 
 function Divider() {
   return <div className="toolbar-divider" />
+}
+
+const FONT_SIZES = ['12px', '13px', '14px', '16px', '18px', '20px', '24px', '28px', '32px']
+const LINE_HEIGHTS = ['1', '1.15', '1.5', '1.75', '2', '2.5']
+
+function FontSizeSelect({ editor }: { editor: Editor }) {
+  const value = (editor.getAttributes('textStyle').fontSize as string | undefined) ?? ''
+
+  return (
+    <select
+      title="Font size"
+      value={value}
+      onChange={(e) => {
+        const size = e.target.value
+        if (size) editor.chain().focus().setFontSize(size).run()
+        else editor.chain().focus().unsetFontSize().run()
+      }}
+    >
+      <option value="">Size</option>
+      {FONT_SIZES.map(size => (
+        <option key={size} value={size}>{parseInt(size, 10)}</option>
+      ))}
+    </select>
+  )
+}
+
+function LineHeightSelect({ editor }: { editor: Editor }) {
+  const value = (editor.getAttributes('paragraph').lineHeight
+    ?? editor.getAttributes('heading').lineHeight
+    ?? '') as string
+
+  return (
+    <select
+      title="Line spacing"
+      value={value}
+      onChange={(e) => {
+        const height = e.target.value
+        if (height) editor.chain().focus().setLineHeight(height).run()
+        else editor.chain().focus().unsetLineHeight().run()
+      }}
+    >
+      <option value="">Spacing</option>
+      {LINE_HEIGHTS.map(height => (
+        <option key={height} value={height}>{height}</option>
+      ))}
+    </select>
+  )
 }

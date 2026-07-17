@@ -32,15 +32,19 @@ export const routing = defineRouting({
   localePrefix:  'as-needed', // / for English, /fr/, /es/, etc. for others
 
   pathnames: {
-    '/':                '/',
-    '/content':         '/content',
-    '/content/[id]':    '/content/[id]',
-    '/topic/[type]':    '/topic/[type]',
-    '/topics':          '/topics',
-    '/topics/[slug]':   '/topics/[slug]',
-    '/authors':         '/authors',
-    '/authors/[slug]':  '/authors/[slug]',
-    '/offline':         '/offline',
+    '/':                    '/',
+    '/content':             '/content',
+    '/content/[slug]':      '/content/[slug]',
+    '/manuals/[slug]':      '/manuals/[slug]',
+    '/prophecies/[slug]':   '/prophecies/[slug]',
+    '/articles/[slug]':     '/articles/[slug]',
+    '/blogs/[slug]':        '/blogs/[slug]',
+    '/topic/[type]':        '/topic/[type]',
+    '/topics':              '/topics',
+    '/topics/[slug]':       '/topics/[slug]',
+    '/authors':             '/authors',
+    '/authors/[slug]':      '/authors/[slug]',
+    '/offline':             '/offline',
   },
 })
 
@@ -50,6 +54,6 @@ export const LOCALES_META: Record<AppLocale, { label: string; native: string; fl
   en: { label: 'English',     native: 'English',     flag: '🇬🇧', dir: 'ltr' },
   es: { label: 'Spanish',     native: 'Español',     flag: '🇪🇸', dir: 'ltr' },
   fr: { label: 'French',      native: 'Français',    flag: '🇫🇷', dir: 'ltr' },
-  pt: { label: 'Portuguese',  native: 'Português',   flag: '🇧🇷', dir: 'ltr' },
+  pt: { label: 'Portuguese',  native: 'Português',   flag: '🇵🇹', dir: 'ltr' },
   ar: { label: 'Arabic',      native: 'العربية',     flag: '🇸🇦', dir: 'rtl' },
 }

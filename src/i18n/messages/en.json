@@ -31,13 +31,17 @@
     "empty": "No content published yet. Check back soon.",
     "peace": {
       "line1": "Peace",
-      "line2": "be with you.",
+      "line2a": "be with",
+      "line2b": "you.",
       "subline": "Here's what's stirring in the body today — and what to take to your prayer closet."
     }
   },
   "featured": {
     "title": "Featured this week",
-    "allContent": "All content"
+    "allContent": "All content",
+    "handpicked": "Hand-picked by the editorial team",
+    "chapters": "{count, plural, =1 {1 chapter} other {# chapters}}",
+    "readTime": "{count, plural, =1 {1 min read} other {# min read}}"
   },
   "about": {
     "eyebrow": "About",
@@ -57,6 +61,7 @@
     "blog": "Blog",
     "viewAll": "View all",
     "latest": "Latest {type}",
+    "entries": "{count, plural, =0 {no entries} =1 {1 entry} other {# entries}}",
     "inFocus": {
       "label": "In focus this week"
     },
@@ -65,7 +70,8 @@
   "library": {
     "eyebrow": "Library",
     "title": "All content",
-    "itemsCount": "{count, plural, =0 {no items} =1 {1 item} other {# items}} available"
+    "itemsCount": "{count, plural, =0 {no items} =1 {1 item} other {# items}} available",
+    "body": "Manuals, prophecies, articles, and blog posts from LoveSeal Church — a living library for the Body of Christ."
   },
   "filters": {
     "title": "Filters",
@@ -110,13 +116,40 @@
     "tags": "Tags",
     "attachments": "Attachments",
     "backToAll": "← Back to all content",
-    "pdfUnavailable": "PDF is currently unavailable.",
+    "pdfUnavailable": "This document's text isn't available yet.",
     "breadcrumb": {
       "home": "Home",
       "content": "Content"
     },
     "translatedNotice": "This page was machine-translated. Some nuance may be lost.",
-    "pendingTranslationNotice": "This content is shown in its original language ({source}). A translation isn’t available yet."
+    "pendingTranslationNotice": "This content is shown in its original language ({source}). A translation isn’t available yet.",
+    "reader": {
+      "breadcrumb": {
+        "topics": "Topics"
+      },
+      "toggleFull": "Full text",
+      "toggleQuick": "Key points",
+      "byline": {
+        "readTime": "{minutes} min read"
+      },
+      "actions": {
+        "copyLink": "Copy link",
+        "copied": "Copied",
+        "share": "Share",
+        "downloadPdf": "Download PDF"
+      },
+      "quick": {
+        "pagination": "{current} of {total}",
+        "next": "Next",
+        "prev": "Previous",
+        "readFull": "Read full story",
+        "pointFallback": "Point {n}"
+      },
+      "related": {
+        "eyebrow": "Related",
+        "heading": "You may also like"
+      }
+    }
   },
   "topic": {
     "eyebrow": {

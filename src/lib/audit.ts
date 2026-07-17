@@ -5,7 +5,7 @@ interface LogParams {
   actorId:        string | null
   actorEmail:     string
   action:         AuditAction
-  resourceType:   'content' | 'category' | 'admin' | 'attachment' | 'author'
+  resourceType:   'content' | 'category' | 'admin' | 'attachment' | 'author' | 'editorial_tag'
   resourceId?:    string | null
   resourceLabel?: string | null
   metadata?:      Record<string, unknown> | null

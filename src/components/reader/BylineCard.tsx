@@ -26,39 +26,31 @@ export default function BylineCard({
   readTimeLabel,
   avatarUrl = null,
   authorSlug = null,
+  coAuthors,
 }: {
   name:          string | null | undefined
-  /** Pre-formatted, locale-aware date string. The byline does no formatting. */
   date:          string
-  /** Pre-formatted "9 min" / "12 min" / etc. label from the parent. */
   readTimeLabel: string
-  /** Pass 5c — author avatar URL. Falls through to initials when null. */
   avatarUrl?:    string | null
-  /** Pass 5c — author slug; when set, name becomes a link to the profile. */
   authorSlug?:   string | null
+  coAuthors?:    Array<{ name: string; slug: string | null; avatarUrl: string | null }>
 }) {
   const displayName = (name && name.trim()) || ''
+  const hasCoAuthors = coAuthors && coAuthors.length > 0
 
-  /* The name component renders as a Link when we have an author slug, plain
-     text otherwise. Same visual styling either way — the underline-on-hover
-     is the only added cue, picked up from the parent style. */
-  const NameEl = displayName && authorSlug ? (
-    <Link
-      href={{ pathname: '/authors/[slug]', params: { slug: authorSlug } }}
-      style={{
-        color:          'var(--text-primary)',
-        fontWeight:     500,
-        textDecoration: 'none',
-      }}
-      className="byline-author-link"
-    >
-      {displayName}
-    </Link>
-  ) : displayName ? (
-    <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>
-      {displayName}
-    </span>
-  ) : null
+  function AuthorName({ n, slug }: { n: string; slug: string | null }) {
+    return slug ? (
+      <Link
+        href={{ pathname: '/authors/[slug]', params: { slug } }}
+        style={{ color: 'var(--text-primary)', fontWeight: 500, textDecoration: 'none' }}
+        className="byline-author-link"
+      >
+        {n}
+      </Link>
+    ) : (
+      <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{n}</span>
+    )
+  }
 
   return (
     <>
@@ -72,20 +64,34 @@ export default function BylineCard({
           fontFamily: 'var(--font-body)',
         }}
       >
-        <InitialsAvatar name={displayName} size={2.25} avatarUrl={avatarUrl} />
+        {/* Stacked avatars for primary + co-authors */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <InitialsAvatar name={displayName} size={2.25} avatarUrl={avatarUrl} />
+          {hasCoAuthors && coAuthors!.slice(0, 2).map((ca, i) => (
+            <div key={i} style={{ marginLeft: '-0.5rem' }}>
+              <InitialsAvatar name={ca.name} size={2.25} avatarUrl={ca.avatarUrl} />
+            </div>
+          ))}
+        </div>
 
         <div
           style={{
             display:    'flex',
             alignItems: 'center',
             flexWrap:   'wrap',
-            gap:        '0.375rem 0.625rem',
+            gap:        '0.375rem 0.5rem',
             fontSize:   '0.875rem',
             color:      'var(--text-secondary)',
             lineHeight: 1.3,
           }}
         >
-          {NameEl}
+          {displayName && <AuthorName n={displayName} slug={authorSlug} />}
+          {hasCoAuthors && coAuthors!.map((ca, i) => (
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ color: 'var(--text-faint)', fontSize: '0.75rem' }}>&amp;</span>
+              <AuthorName n={ca.name} slug={ca.slug} />
+            </span>
+          ))}
           {displayName && <Dot />}
           <span>{date}</span>
           <Dot />
@@ -93,12 +99,8 @@ export default function BylineCard({
         </div>
       </div>
 
-      {/* Link hover — match the visual pattern used elsewhere; inline
-          styles can't target :hover. */}
       <style>{`
-        .byline-author-link:hover {
-          text-decoration: underline;
-        }
+        .byline-author-link:hover { text-decoration: underline; }
       `}</style>
     </>
   )

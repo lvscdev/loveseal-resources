@@ -24,6 +24,7 @@ import ContentCard from '@/components/public/ContentCard'
 
 interface TopicGridItem {
   id:              string
+  slug:            string | null
   title:           string
   content_type:    'manual' | 'prophecy' | 'article' | 'blog'
   theme:           string | null
@@ -31,7 +32,7 @@ interface TopicGridItem {
   series:          string | null
   date_preached:   string | null
   cover_image_url: string | null
-  created_at:      string
+  published_at:    string
   summary_points:  string[] | null
 }
 

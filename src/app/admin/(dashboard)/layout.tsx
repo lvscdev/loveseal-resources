@@ -28,7 +28,7 @@ export default async function AdminLayout({
       }}>
         <AdminTopbar userEmail={me?.email ?? ''} />
 
-        <main style={{
+        <main className="admin-main-pad" style={{
           flex: 1,
           padding: '32px 32px 64px',
           maxWidth: '1400px',

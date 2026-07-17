@@ -17,8 +17,9 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   const t = await getTranslations({ locale, namespace: 'topics' })
 
   return {
-    title:      t('title'),
-    alternates: metadataAlternates(locale, '/topics'),
+    title:       t('title'),
+    description: t('body'),
+    alternates:  metadataAlternates(locale, '/topics'),
   }
 }
 

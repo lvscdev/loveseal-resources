@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import type { ContentType, Locale } from '@/types'
+import { getBaseUrl } from '@/lib/locale-urls'
 
 /* ── Tailwind class merger ── */
 
@@ -82,6 +83,5 @@ export function getContentUrl(id: string, type: ContentType, locale: Locale = 'e
 }
 
 export function getAbsoluteUrl(path: string): string {
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  return `${base}${path}`
+  return `${getBaseUrl()}${path}`
 }

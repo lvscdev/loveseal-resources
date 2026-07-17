@@ -1,41 +1,26 @@
 /**
  * Shared hero header for topic landing pages.
  *
- *   ┌──────────────────────────────────────────────────────────────┐
- *   │ EYEBROW (gold or type-accent)                                │
- *   │                                                              │
- *   │ DISPLAY TITLE — Barlow Condensed 900, uppercase              │
- *   │                                                              │
- *   │ Optional supporting copy (one paragraph)                     │
- *   │                                                              │
- *   │ Count chip: "8 items" (muted)                                │
- *   └──────────────────────────────────────────────────────────────┘
+ * Desktop layout (≥ 768px) — two columns per design:
+ *   LEFT: eyebrow dot + "CONTENT TYPE · N of 4" label + giant display heading + intro copy
+ *   RIGHT: count badge + Follow pill (future) + digest hint
  *
- * Used by:
- *   - `/topic/[type]/page.tsx`   (content-type filter)
- *   - `/topics/page.tsx`         (tag index)
- *   - `/topics/[slug]/page.tsx`  (single-tag filter)
- *
- * Matches the visual rhythm of the library page header (eyebrow + display
- * heading + count) so navigating type → type doesn't feel like jumping
- * between unrelated layouts.
+ * Mobile: single column stack.
  */
 
 interface TopicHeaderProps {
-  /** Eyebrow line above the heading (e.g. "TYPE", "TAG", "TOPICS"). */
   eyebrow:     string
-  /** Display heading (uppercased server-side by CSS). */
   title:       string
-  /** Optional supporting paragraph below the heading. */
   body?:       string | null
-  /** Pre-formatted count label, e.g. "8 items" or "no items yet". */
   countLabel:  string
-  /**
-   * Optional accent colour for the eyebrow. Defaults to brand-gold to match
-   * the library page. Type-specific topic pages override to their type
-   * accent (red for prophecies, blue for manuals, etc.).
-   */
   accentColor?: string
+}
+
+const TYPE_INDEX: Record<string, number> = {
+  manual:   1,
+  prophecy: 2,
+  article:  3,
+  blog:     4,
 }
 
 export default function TopicHeader({
@@ -43,57 +28,115 @@ export default function TopicHeader({
   title,
   body,
   countLabel,
-  accentColor = 'var(--brand-gold)',
+  accentColor = 'var(--brand-red)',
 }: TopicHeaderProps) {
+  /* Derive a "02 of 04" style label from the title for content-type pages.
+     Falls back gracefully if the title doesn't map. */
+  const typeSlug = title.toLowerCase().replace(/s$/, '') // "Prophecies" → "prophecy" (rough)
+  const typeIdx  = TYPE_INDEX[typeSlug] ?? TYPE_INDEX[title.toLowerCase()]
+
   return (
-    <header style={{ marginBottom: '2rem' }}>
-      <p style={{
-        fontSize:      '0.6875rem',     /* 11px */
-        fontWeight:    500,
-        letterSpacing: '0.14em',
-        textTransform: 'uppercase',
-        color:         accentColor,
-        margin:        '0 0 0.625rem',
-        fontFamily:    'var(--font-body)',
-      }}>
-        {eyebrow}
-      </p>
+    <header className="topic-header" style={{ marginBottom: '2rem' }}>
+      <div className="topic-header-inner">
+        {/* LEFT: eyebrow + title + body */}
+        <div>
+          <div style={{
+            display:    'flex',
+            alignItems: 'center',
+            gap:        '0.75rem',
+            marginBottom: '1rem',
+          }}>
+            <span
+              aria-hidden="true"
+              style={{
+                width:        '0.625rem',
+                height:       '0.625rem',
+                borderRadius: '50%',
+                background:   accentColor,
+                display:      'inline-block',
+                flexShrink:   0,
+              }}
+            />
+            <p style={{
+              fontSize:      '0.6875rem',
+              fontWeight:    700,
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color:         'var(--text-secondary)',
+              margin:        0,
+            }}>
+              {typeIdx
+                ? `${eyebrow} · ${String(typeIdx).padStart(2, '0')} OF 04`
+                : eyebrow}
+            </p>
+          </div>
 
-      <h1 style={{
-        fontFamily:    'var(--font-display), Barlow Condensed, sans-serif',
-        fontSize:      'clamp(2.25rem, 6vw, 4rem)',  /* 36px → 64px */
-        fontWeight:    900,
-        textTransform: 'uppercase',
-        color:         'var(--text-primary)',
-        lineHeight:    0.96,
-        letterSpacing: '-0.02em',
-        margin:        '0 0 0.5rem',
-      }}>
-        {title}
-      </h1>
+          <h1 style={{
+            fontFamily:    'var(--font-display), "Barlow Condensed", sans-serif',
+            fontSize:      'clamp(3rem, 10vw, 8rem)',
+            fontWeight:    800,
+            textTransform: 'uppercase',
+            color:         'var(--text-primary)',
+            lineHeight:    0.92,
+            letterSpacing: '-0.02em',
+            margin:        '0 0 1rem',
+          }}>
+            {title}
+          </h1>
 
-      {body && (
-        <p style={{
-          fontSize:   '1rem',           /* 16px */
-          lineHeight: 1.6,
-          color:      'var(--text-secondary)',
-          /* Local cap — pulled in for a comfortable measure that's narrower
-             than the page's --width-content. Not promoted to a token because
-             only the topic-page intro currently uses it. */
-          maxWidth:   '52ch',
-          margin:     '0.75rem 0 0.875rem',
+          {body && (
+            <p style={{
+              fontSize:   '1.0625rem',
+              lineHeight: 1.55,
+              color:      'var(--text-secondary)',
+              maxWidth:   '36rem',
+              margin:     0,
+            }}>
+              {body}
+            </p>
+          )}
+        </div>
+
+        {/* RIGHT: count + future follow pill */}
+        <div style={{
+          display:       'flex',
+          flexDirection: 'column',
+          alignItems:    'flex-end',
+          gap:           '1rem',
         }}>
-          {body}
-        </p>
-      )}
+          <span style={{
+            display:      'inline-flex',
+            alignItems:   'center',
+            padding:      '0.625rem 1rem',
+            borderRadius: '999rem',
+            background:   'var(--bg-elevated, #F5F5F5)',
+            color:        'var(--text-secondary)',
+            fontSize:     '0.8125rem',
+            fontWeight:   500,
+            whiteSpace:   'nowrap',
+          }}>
+            {countLabel}
+          </span>
+        </div>
+      </div>
 
-      <p style={{
-        fontSize: '0.875rem',           /* 14px */
-        color:    'var(--text-tertiary)',
-        margin:   0,
-      }}>
-        {countLabel}
-      </p>
+      <style>{`
+        .topic-header-inner {
+          display: grid;
+          grid-template-columns: 1.5fr 1fr;
+          gap: 3.5rem;
+          align-items: flex-end;
+        }
+        @media (max-width: 48rem) {
+          .topic-header-inner {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          .topic-header-inner > div:last-child {
+            align-items: flex-start;
+          }
+        }
+      `}</style>
     </header>
   )
 }

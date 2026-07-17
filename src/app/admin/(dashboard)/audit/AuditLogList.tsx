@@ -22,6 +22,9 @@ const ACTION_LABELS: Record<AuditAction, string> = {
   'author.created':         'Created author',
   'author.updated':         'Updated author',
   'author.deleted':         'Deleted author',
+  'editorial_tag.created':  'Created editorial tag',
+  'editorial_tag.updated':  'Updated editorial tag',
+  'editorial_tag.deleted':  'Deleted editorial tag',
 }
 
 const ACTION_GROUPS: Record<string, { label: string; color: string }> = {
@@ -30,6 +33,7 @@ const ACTION_GROUPS: Record<string, { label: string; color: string }> = {
   admin:      { label: 'Admin',      color: '#C32126' },
   attachment: { label: 'Attachment', color: '#7B5EA7' },
   author:     { label: 'Author',     color: '#5BAA6E' },
+  editorial_tag: { label: 'Editorial', color: '#7B5EA7' },
 }
 
 export default function AuditLogList({ entries }: { entries: AuditLogRow[] }) {

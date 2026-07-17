@@ -1,15 +1,20 @@
 import type { Metadata, Viewport } from 'next'
-import { Barlow_Condensed, DM_Sans } from 'next/font/google'
+import { Suspense } from 'react'
+import { Barlow_Condensed, Urbanist } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { ThemeProvider } from '@/components/theme/ThemeProvider'
 import { themeScript } from '@/lib/theme-script'
 import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister'
+import Toaster from '@/components/ui/Toaster'
+import RouteProgressBar from '@/components/ui/RouteProgressBar'
+import { GoogleAnalytics } from '@next/third-parties/google'
+import { getBaseUrl } from '@/lib/locale-urls'
 import '@/styles/globals.css'
 
 /* Barlow Condensed is the display font: hero headline, all H1s, all H2s, all
    ContentCard titles, all section eyebrows. It IS the LCP-eligible text on
-   most pages, so preloading it is a real LCP win. The body font (DM Sans) is
+   most pages, so preloading it is a real LCP win. The body font (Urbanist) is
    used for everything else and isn't on the LCP path — leave it unpreloaded. */
 const barlowCondensed = Barlow_Condensed({
   weight: ['400', '700', '900'],
@@ -19,16 +24,16 @@ const barlowCondensed = Barlow_Condensed({
   preload: true,
 })
 
-const dmSans = DM_Sans({
+const urbanist = Urbanist({
   weight: ['300', '400', '500'],
   subsets: ['latin'],
-  variable: '--font-dm-sans',
+  variable: '--font-urbanist',
   display: 'swap',
   preload: false,
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(getBaseUrl()),
   title:        { default: 'Lively Resources', template: '%s | Lively Resources' },
   description:  'Manuals, Prophecies, Articles, and Blog from LoveSeal Church — Lively Resources for the Body of Christ.',
   manifest:     '/manifest.webmanifest',
@@ -39,11 +44,24 @@ export const metadata: Metadata = {
     title:         'Lively Resources',
   },
   icons: {
-    /* Standard tab favicon — multi-resolution .ico for broad legacy support. */
-    icon:     [{ url: '/icons/favicon.ico', sizes: 'any' }],
-    /* iOS home-screen icon. iOS ignores the manifest's `icons` array, so this
-       <link rel="apple-touch-icon"> is the only way to control its install image. */
-    apple:    [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
+    icon:  [
+      { url: '/icons/LVSC_fav_icon_color.png', type: 'image/png' },
+      { url: '/icons/icon.svg',  type: 'image/svg+xml' },
+      { url: '/icons/favicon.ico', sizes: 'any' },
+    ],
+    apple: [{ url: '/icons/LVSC_fav_icon_color.png', sizes: '180x180' }],
+  },
+  openGraph: {
+    type:        'website',
+    url:         getBaseUrl(),
+    siteName:    'Lively Resources',
+    title:       'Lively Resources',
+    description: 'Manuals, Prophecies, Articles, and Blog from LoveSeal Church — Lively Resources for the Body of Christ.',
+  },
+  twitter: {
+    card:  'summary_large_image',
+    title: 'Lively Resources',
+    description: 'Manuals, Prophecies, Articles, and Blog from LoveSeal Church — Lively Resources for the Body of Christ.',
   },
   formatDetection: {
     /* Stop iOS Safari auto-linking phone numbers in article text. */
@@ -72,8 +90,8 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
-      className={`${barlowCondensed.variable} ${dmSans.variable}`}
-      style={{ fontFamily: 'var(--font-dm-sans), DM Sans, sans-serif' }}
+      className={`${barlowCondensed.variable} ${urbanist.variable}`}
+      style={{ fontFamily: 'var(--font-urbanist), Urbanist, sans-serif' }}
       suppressHydrationWarning
     >
       <head>
@@ -86,8 +104,25 @@ export default async function RootLayout({
             {children}
           </NextIntlClientProvider>
         </ThemeProvider>
+
+        {/* Global UI primitives — mounted once at the root so they're
+            available on every page (public + admin). Toaster surfaces
+            toasts triggered from anywhere via the `toast.*` API in
+            `lib/toast.ts`. RouteProgressBar intercepts link clicks and
+            renders a thin red progress bar at the top during route
+            transitions. Both must mount client-side. */}
+        <Toaster />
+        <Suspense fallback={null}>
+          <RouteProgressBar />
+        </Suspense>
+
         {/* Registers /sw.js in production only. Renders nothing. */}
         <ServiceWorkerRegister />
+
+        {/* GA4 — loads after hydration, skipped when env var is absent */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
       </body>
     </html>
   )

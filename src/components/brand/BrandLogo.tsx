@@ -1,38 +1,62 @@
 'use client'
 
-import Image from 'next/image'
 import { useTheme } from '@/components/theme/ThemeProvider'
 
 /**
- * Logo tile for "Lively Resources by LoveSeal Church".
+ * Exact design wordmark: rectangular 56×44 tile, Barlow Condensed.
+ * - "lively"    weight 800, fontSize ~16
+ * - "RESOURCES" weight 700, fontSize ~7, wide letter-spacing
  *
- * The SVG file is at `public/brand/wordmark-light.svg` (for light-themed
- * pages) and `public/brand/wordmark-dark.svg` (for dark-themed pages). Both
- * are placeholder art generated from DejaVu Sans Condensed. To replace with
- * the real brand SVGs, just drop new files at the same paths — no code
- * changes required.
- *
- * The SVG is a self-contained tile (background + foreground): on a light bg,
- * we want a black tile (high contrast); on a dark bg, an inverted white tile.
- * The `resolved` value from ThemeProvider tells us which to use.
+ * tone: 'dark' = ink bg (light mode), 'red' = brand red bg (dark mode)
+ * size prop controls height; width scales at the design's 56:44 ratio.
  */
-export default function BrandLogo({
-  size = 40,
-}: {
-  /** Pixel size of the square tile. Default 40. */
-  size?: number
-}) {
+export default function BrandLogo({ size = 44 }: { size?: number }) {
   const { resolved } = useTheme()
-  const src = resolved === 'dark' ? '/brand/wordmark-dark.svg' : '/brand/wordmark-light.svg'
+  const tone = resolved === 'dark' ? 'red' : 'dark'
+
+  const h = size
+  const w = Math.round((56 / 44) * h)
+  const bg = tone === 'red' ? '#C32126' : '#14110D'
+  const fLively = Math.round((16 / 44) * h * 10) / 10
+  const fRes    = Math.round((7  / 44) * h * 10) / 10
+  const pad     = Math.round((8  / 44) * h * 10) / 10
+  const mt      = Math.round((2  / 44) * h * 10) / 10
 
   return (
-    <Image
-      src={src}
-      alt="Lively Resources"
-      width={size}
-      height={size}
-      priority
-      style={{ display: 'block', borderRadius: '4px' }}
-    />
+    <div
+      aria-label="Lively Resources"
+      style={{
+        width:          w,
+        height:         h,
+        background:     bg,
+        color:          '#ffffff',
+        fontFamily:     'var(--font-display), "Barlow Condensed", sans-serif',
+        lineHeight:     1,
+        display:        'flex',
+        flexDirection:  'column',
+        justifyContent: 'center',
+        alignItems:     'flex-start',
+        padding:        `0 ${pad}px`,
+        boxSizing:      'border-box',
+        letterSpacing:  '-0.01em',
+        flexShrink:     0,
+        userSelect:     'none',
+      }}
+    >
+      <span style={{ fontWeight: 800, fontSize: fLively, lineHeight: 0.95 }}>
+        lively
+      </span>
+      <span
+        style={{
+          fontWeight:    700,
+          fontSize:      fRes,
+          lineHeight:    1,
+          letterSpacing: '0.16em',
+          marginTop:     mt,
+        }}
+      >
+        RESOURCES
+      </span>
+    </div>
   )
 }

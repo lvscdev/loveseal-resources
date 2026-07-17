@@ -8,6 +8,25 @@ const intlMiddleware = createIntlMiddleware(routing)
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  /* ───────── ADMIN API ROUTES — JSON 401 if not authenticated ───────── */
+  if (pathname.startsWith('/api/admin')) {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() { return request.cookies.getAll() },
+          setAll() {},
+        },
+      }
+    )
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    return NextResponse.next()
+  }
+
   /* ───────── ADMIN ROUTES — Supabase auth check ───────── */
   if (pathname.startsWith('/admin')) {
     let supabaseResponse = NextResponse.next({ request })
@@ -70,8 +89,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match all routes except API, static files, sitemap, robots, favicon
   matcher: [
+    // All public + admin page routes (excludes all /api/*, static, and file extensions)
     '/((?!api|_next/static|_next/image|sitemap.xml|robots.txt|favicon.ico|.*\\..*).*)',
+    // Admin API routes — protected separately with JSON 401
+    '/api/admin/:path*',
   ],
 }

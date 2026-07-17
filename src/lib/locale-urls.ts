@@ -13,7 +13,9 @@
 import { routing } from '@/i18n/routing'
 
 export function getBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  const url = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  return `https://${url}`
 }
 
 /** Build a full URL for a given locale and pathname. */

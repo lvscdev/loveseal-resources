@@ -1,4 +1,5 @@
 import { BRAND } from './Brand'
+import { getBaseUrl } from '@/lib/locale-urls'
 
 /* ─────────────────────────────────────────────────────────────────────────────
    JSON-LD Schema helpers for SEO + rich results.
@@ -31,9 +32,7 @@ export interface BreadcrumbItem {
 
 /* ── Small utilities ─────────────────────────────────────────────────────── */
 
-function baseUrl(): string {
-  return process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-}
+const baseUrl = getBaseUrl
 
 /* Build a BreadcrumbList node from an ordered array of crumbs.
    The final crumb (the current page) intentionally omits `item` per Google's

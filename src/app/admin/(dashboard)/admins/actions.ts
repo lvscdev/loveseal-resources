@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getCurrentAdmin } from '@/lib/admin-user'
 import { logAudit } from '@/lib/audit'
+import { getBaseUrl } from '@/lib/locale-urls'
 import type { AdminRole } from '@/types'
 
 interface ActionResult {
@@ -33,7 +34,7 @@ export async function inviteAdmin(
   const supabase = createAdminClient()
 
   // 1. Send Supabase invite email — creates the auth user
-  const redirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/admin/invite/accept`
+  const redirectTo = `${getBaseUrl()}/admin/invite/accept`
   const { data: invited, error: inviteErr } = await supabase.auth.admin.inviteUserByEmail(
     cleanEmail,
     { redirectTo }
@@ -206,7 +207,7 @@ export async function resendInvite(adminId: string): Promise<ActionResult> {
   if (!t) return { ok: false, error: 'Admin not found' }
   if (t.accepted_at) return { ok: false, error: 'Admin has already accepted' }
 
-  const redirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/admin/invite/accept`
+  const redirectTo = `${getBaseUrl()}/admin/invite/accept`
   const { error } = await supabase.auth.admin.inviteUserByEmail(t.email, { redirectTo })
   if (error) return { ok: false, error: error.message }
 

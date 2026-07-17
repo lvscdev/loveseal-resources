@@ -63,8 +63,8 @@ export default async function TopicTagPage({ params }: PageParams) {
   const { data } = await supabase
     .from('content')
     .select(`
-      id, title, content_type, theme, speaker, series,
-      date_preached, cover_image_url, summary_points, created_at, tags
+      id, slug, title, content_type, theme, speaker, series,
+      date_preached, cover_image_url, summary_points, published_at, tags
     `)
     .eq('status', 'published')
     .or(
@@ -73,13 +73,14 @@ export default async function TopicTagPage({ params }: PageParams) {
       // OR theme matches case-insensitively (themes are the same source pool)
       `theme.in.(${allLabels.map(quote).join(',')})`,
     )
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false })
 
   /* Belt-and-braces filter: trim to rows where any tag/theme matches the
      slug after normalisation. Defensive against `.or()` returning extra
      rows for unrelated reasons. */
   const items = ((data ?? []) as Array<{
     id:              string
+    slug:            string | null
     title:           string
     content_type:    'manual' | 'prophecy' | 'article' | 'blog'
     theme:           string | null
@@ -88,7 +89,7 @@ export default async function TopicTagPage({ params }: PageParams) {
     date_preached:   string | null
     cover_image_url: string | null
     summary_points:  string[] | null
-    created_at:      string
+    published_at:    string
     tags:            string[] | null
   }>).filter(row => {
     const allTokens = [

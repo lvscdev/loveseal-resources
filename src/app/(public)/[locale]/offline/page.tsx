@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { metadataAlternates } from '@/lib/locale-urls'
+import OfflineCachedPages from './OfflineCachedPages'
 
 export const dynamic = 'force-static'
 
@@ -72,6 +73,8 @@ export default async function OfflinePage({ params }: PageParams) {
       }}>
         {t('body')}
       </p>
+
+      <OfflineCachedPages />
     </div>
   )
 }

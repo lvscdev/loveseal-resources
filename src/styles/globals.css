@@ -9,11 +9,15 @@
 [data-theme="dark"] {
   
   --font-display:   var(--font-barlow);
-  --font-body:      var(--font-dm-sans);
+  --font-body:      var(--font-urbanist);
   --page-inline-padding: 0.875rem;
   --width-prose:   48.75rem;
   --width-narrow:  40rem;
   --width-content: 80rem;
+  /* Site-wide outer container — header, footer, and full-bleed hero sections
+     cap here so they never outrun the body content by more than ~10rem.
+     Tune this one value to adjust all outer containers at once. */
+  --width-site:    90rem;
 
 
   /* Brand — same in both themes */
@@ -53,23 +57,25 @@
 }
 
 [data-theme="light"] {
-  /* Surfaces */
-  --bg-base:        #F8F9FA;
+  /* Surfaces — white-first design per design system */
+  --bg-base:        #FFFFFF;
   --bg-raised:      #FFFFFF;
-  --bg-elevated:    #F1F3F5;
+  --bg-elevated:    #F5F5F5;
+  --bg-surface-alt: #F5F5F5;   /* design --lr-surface-alt */
+  --bg-surface-2:   #EEEEEE;   /* design --lr-surface-2 */
   --bg-input:       #FFFFFF;
-  --bg-table-head:  #F1F3F5;
+  --bg-table-head:  #F5F5F5;
 
   /* Borders */
-  --border-subtle:  #E9ECEF;
-  --border-strong:  #DEE2E6;
+  --border-subtle:  rgba(20,17,13,0.08);
+  --border-strong:  rgba(20,17,13,0.16);
 
-  /* Text */
-  --text-primary:   #212529;
-  --text-secondary: #495057;
-  --text-tertiary:  #6c757d;
-  --text-muted:     #868e96;
-  --text-faint:     #adb5bd;
+  /* Text — warm ink per design */
+  --text-primary:   #14110D;   /* design --lr-ink */
+  --text-secondary: #5B5347;   /* design --lr-ink-2 */
+  --text-tertiary:  #94897A;   /* design --lr-ink-3 */
+  --text-muted:     #94897A;
+  --text-faint:     #C9BFAC;   /* design --lr-ink-faint */
   --text-inverse:   #FFFFFF;
 
   /* Status */
@@ -145,4 +151,62 @@ body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── Content titles ────────────────────────────────────────────────────── */
+/*
+ * Every article / manual / blog / prophecy title reads these two variables.
+ * Change them here to update ALL titles site-wide at once:
+ *
+ *   --content-title-transform  (default: uppercase)
+ *   --content-title-weight     (default: 800)
+ *
+ * To override for a specific context, re-declare the variable on a parent:
+ *   .lr-reader  { --content-title-weight: 900; }
+ *   .content-card.list-variant { --content-title-transform: capitalize; }
+ */
+:root {
+  --content-title-transform: uppercase;
+  --content-title-weight: 800;
+}
+
+/* ── Bible reference spans ─────────────────────────────────────────────── */
+.bible-ref {
+  color:            var(--brand-gold);
+  border-bottom:    1px dotted var(--brand-gold);
+  cursor:           pointer;
+  border-radius:    2px;
+  padding:          0 1px;
+  transition:       background 0.12s, color 0.12s;
+  /* Larger tap target on mobile without affecting line height */
+  padding-block:    0.1em;
+}
+.bible-ref:hover,
+.bible-ref:focus-visible {
+  background: rgba(245, 174, 65, 0.12);
+  outline:    none;
+}
+
+/* ── Admin login inputs ─────────────────────────────────────────────────── */
+.login-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Admin layout — responsive helpers ─────────────────────────────────── */
+.admin-sidebar-wrap {
+  display: flex;
+  flex-shrink: 0;
+}
+.admin-bottom-nav {
+  display: none;
+}
+@media (max-width: 767px) {
+  .admin-sidebar-wrap { display: none; }
+  .admin-bottom-nav   { display: flex; }
+  .admin-main-pad     { padding: 16px 16px 80px !important; }
+  .admin-topbar-brand { display: flex !important; }
+}
+@media (min-width: 768px) {
+  .admin-bottom-nav   { display: none !important; }
+  .admin-topbar-brand { display: none !important; }
 }

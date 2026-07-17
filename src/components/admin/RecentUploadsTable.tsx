@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 import { toggleContentStatus, deleteContent } from '@/app/admin/(dashboard)/content/actions'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 interface RecentItem {
   id: string
@@ -27,6 +28,7 @@ const TYPE_COLORS: Record<string, string> = {
 export default function RecentUploadsTable({ items }: { items: RecentItem[] }) {
   const router = useRouter()
   const [busy, setBusy] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null)
 
   if (!items.length) {
     return (
@@ -63,12 +65,13 @@ export default function RecentUploadsTable({ items }: { items: RecentItem[] }) {
     setBusy(null)
   }
 
-  async function handleDelete(id: string, title: string) {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return
-    setBusy(id)
-    await deleteContent(id)
+  async function confirmDelete() {
+    if (!deleteTarget) return
+    setBusy(deleteTarget.id)
+    await deleteContent(deleteTarget.id)
     router.refresh()
     setBusy(null)
+    setDeleteTarget(null)
   }
 
   function formatDate(dateString: string) {
@@ -160,7 +163,7 @@ export default function RecentUploadsTable({ items }: { items: RecentItem[] }) {
                 <td style={{ ...tdStyle, textAlign: 'right' }}>
                   <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
                     <Link href={`/admin/content/${item.id}`} style={iconBtn} title="Edit">✎</Link>
-                    <button onClick={() => handleDelete(item.id, item.title)} disabled={isBusy}
+                    <button onClick={() => setDeleteTarget({ id: item.id, title: item.title })} disabled={isBusy}
                       style={{ ...iconBtn, color: 'var(--danger-fg)' }} title="Delete">×</button>
                   </div>
                 </td>
@@ -169,6 +172,17 @@ export default function RecentUploadsTable({ items }: { items: RecentItem[] }) {
           })}
         </tbody>
       </table>
+
+      <ConfirmModal
+        open={!!deleteTarget}
+        title="Delete content"
+        message={`Delete "${deleteTarget?.title}"? This cannot be undone.`}
+        confirmLabel="Delete"
+        danger
+        busy={busy === deleteTarget?.id}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }

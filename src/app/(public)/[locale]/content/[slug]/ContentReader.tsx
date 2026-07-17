@@ -5,15 +5,20 @@ import { useTranslations, useLocale } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
 import { readTimeMinutes } from '@/lib/read-time'
-import Breadcrumb       from '@/components/reader/Breadcrumb'
-import ReaderToggle     from '@/components/reader/ReaderToggle'
-import BylineCard       from '@/components/reader/BylineCard'
-import ReaderIconActions from '@/components/reader/ReaderIconActions'
-import QuickStoryView   from '@/components/reader/QuickStoryView'
+import { contentHref } from '@/lib/content-url'
+import Breadcrumb         from '@/components/reader/Breadcrumb'
+import ReaderToggle       from '@/components/reader/ReaderToggle'
+import BylineCard         from '@/components/reader/BylineCard'
+import ReaderIconActions  from '@/components/reader/ReaderIconActions'
+import QuickStoryView     from '@/components/reader/QuickStoryView'
+import BibleRefActivator  from '@/components/reader/BibleRefActivator'
+import MediaSection       from '@/components/reader/MediaSection'
+import { processBibleRefs } from '@/lib/bible-parse'
 import '@/components/editor/editor.css'
 
 interface Item {
   id: string
+  slug: string | null
   title: string
   content_type: 'manual' | 'prophecy' | 'article' | 'blog'
   source_mode: 'pdf' | 'editor'
@@ -42,8 +47,10 @@ interface Item {
     slug:       string
     avatar_url: string | null
   } | null
-  created_at: string
-  updated_at: string
+  published_at: string
+  updated_at:   string
+  audio_url:    string | null
+  video_url:    string | null
 }
 
 interface Attachment {
@@ -53,6 +60,15 @@ interface Attachment {
   file_type: 'pdf' | 'image' | 'audio' | 'other'
   mime_type: string
   size_bytes: number
+}
+
+interface SeriesItem {
+  id: string
+  slug: string | null
+  title: string
+  content_type: string
+  cover_image_url: string | null
+  published_at: string
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -78,6 +94,7 @@ export default function ContentReader(props: {
   signedPdfUrl:      string | null
   translationStatus?: 'native' | 'translated' | 'pending'
   sourceLanguage?:    string
+  seriesItems?:       SeriesItem[]
 }) {
   return (
     <Suspense fallback={null}>
@@ -90,12 +107,14 @@ function ContentReaderInner({
   item, attachments, signedPdfUrl,
   translationStatus = 'native',
   sourceLanguage,
+  seriesItems,
 }: {
   item:              Item
   attachments:       Attachment[]
   signedPdfUrl:      string | null
   translationStatus?: 'native' | 'translated' | 'pending'
   sourceLanguage?:    string
+  seriesItems?:       SeriesItem[]
 }) {
   const t        = useTranslations('content')
   const tTypes   = useTranslations('content.types')
@@ -140,10 +159,13 @@ function ContentReaderInner({
 
   const dateString = item.date_preached
     ? new Date(item.date_preached).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
-    : new Date(item.created_at).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
+    : new Date(item.published_at).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
+
+  const ARTICLE_ID = `content-article-${item.id}`
+  const processedHtml = item.body_html ? processBibleRefs(item.body_html) : ''
 
   return (
-    <article style={{
+    <article id={ARTICLE_ID} style={{
       /* Long-form prose article — uses --width-prose (780px), the
          typographic sweet spot for sustained reading (~70-80 chars
          per line at body font size). */
@@ -260,14 +282,14 @@ function ContentReaderInner({
       )}
 
       <h1 style={{
-        fontFamily: 'var(--font-display), Barlow Condensed, sans-serif',
-        fontSize: 'clamp(32px, 5vw, 52px)',
-        fontWeight: 900,
-        textTransform: 'uppercase',
-        color: 'var(--text-primary)',
-        lineHeight: 1.0,
+        fontFamily:    'var(--font-display), Barlow Condensed, sans-serif',
+        fontSize:      'clamp(32px, 5vw, 52px)',
+        fontWeight:    'var(--content-title-weight, 800)',
+        textTransform: 'var(--content-title-transform, uppercase)',
+        color:         'var(--text-primary)',
+        lineHeight:    1.0,
         letterSpacing: '-0.01em',
-        marginBottom: '20px',
+        marginBottom:  '20px',
       }}>
         {item.title}
       </h1>
@@ -299,6 +321,13 @@ function ContentReaderInner({
         downloadUrl={isPdfMode ? signedPdfUrl : null}
       />
 
+      {/* Audio player + YouTube embed — shown when either URL is set. */}
+      <MediaSection
+        audioUrl={item.audio_url}
+        videoUrl={item.video_url}
+        contentType={item.content_type}
+      />
+
       {/* ────────────────────────────────────────────────────────────
           QUICK MODE: only the cover + paginated summary cards.
           Skips body, scripture refs, tags, attachments. Final card's
@@ -319,6 +348,10 @@ function ContentReaderInner({
             pointFallbackLabel={(n) => tReader('quick.pointFallback', { n })}
             onReadFull={() => setMode('full')}
           />
+
+          {seriesItems && seriesItems.length > 0 && (
+            <SeriesStrip series={item.series!} items={seriesItems} />
+          )}
 
           {/* Minimal footer — just "Back to all content". Action icons live
               at the top of the page (icon row); no duplicates here. */}
@@ -359,17 +392,20 @@ function ContentReaderInner({
               tUnavailable={t('pdfUnavailable')}
             />
           ) : (
-            <div className="lr-editor-content" style={{
-              background: 'transparent',
-              padding: 0,
-              minHeight: 'auto',
-              maxHeight: 'none',
-              fontSize: '17px',
-              lineHeight: 1.75,
-              textAlign: 'start',
-            }}
-            dangerouslySetInnerHTML={{ __html: item.body_html ?? '' }}
-            />
+            <>
+              <div className="lr-editor-content" style={{
+                background: 'transparent',
+                padding: 0,
+                minHeight: 'auto',
+                maxHeight: 'none',
+                fontSize: '17px',
+                lineHeight: 1.75,
+                textAlign: 'start',
+              }}
+              dangerouslySetInnerHTML={{ __html: processedHtml }}
+              />
+              <BibleRefActivator containerId={ARTICLE_ID} />
+            </>
           )}
 
           {item.scripture_refs.length > 0 && (
@@ -419,6 +455,10 @@ function ContentReaderInner({
                 {attachments.map(att => <AttachmentRow key={att.id} att={att} />)}
               </div>
             </section>
+          )}
+
+          {seriesItems && seriesItems.length > 0 && (
+            <SeriesStrip series={item.series!} items={seriesItems} />
           )}
 
           {/* Minimal footer — just "Back to all content". Action icons live
@@ -559,6 +599,87 @@ const sectionHeadingStyle: React.CSSProperties = {
   color: 'var(--text-muted)',
   marginBottom: '12px',
   fontFamily: 'var(--font-body)',
+}
+
+const TYPE_BG: Record<string, string> = {
+  manual: '#D5E9F6', prophecy: '#F9D6D7', article: '#FEF0D5', blog: '#C8BFEC',
+}
+
+function SeriesStrip({ series, items }: { series: string; items: SeriesItem[] }) {
+  return (
+    <section style={{ marginTop: '48px', paddingTop: '24px', borderTop: '0.5px solid var(--border-subtle)' }}>
+      <div style={{ marginBottom: '14px' }}>
+        <div style={sectionHeadingStyle}>Series</div>
+        <h2 style={{
+          fontFamily:    'var(--font-display), Barlow Condensed, sans-serif',
+          fontSize:      'clamp(1.125rem, 3vw, 1.375rem)',
+          fontWeight:    800,
+          letterSpacing: '-0.01em',
+          textTransform: 'uppercase',
+          color:         'var(--text-primary)',
+          margin:        0,
+        }}>
+          More from &ldquo;{series}&rdquo;
+        </h2>
+      </div>
+
+      <div style={{
+        display:               'grid',
+        gridTemplateColumns:   'repeat(auto-fill, minmax(10rem, 1fr))',
+        gap:                   '0.75rem',
+      }}>
+        {items.map(si => (
+          <Link
+            key={si.id}
+            href={contentHref(si)}
+            style={{ textDecoration: 'none', display: 'block' }}
+          >
+            <div style={{
+              borderRadius: '0.75rem',
+              background:   TYPE_BG[si.content_type] ?? '#F0EDE8',
+              overflow:     'hidden',
+              transition:   'transform 0.15s, box-shadow 0.15s',
+            }}>
+              {/* Cover thumbnail */}
+              <div style={{
+                aspectRatio: '3 / 2',
+                background:  si.cover_image_url
+                  ? `url(${si.cover_image_url}) center/cover`
+                  : TYPE_BG[si.content_type] ?? '#F0EDE8',
+              }} />
+
+              {/* Title area */}
+              <div style={{ padding: '0.625rem 0.75rem 0.75rem' }}>
+                <div style={{
+                  fontSize:      '0.6875rem',
+                  fontWeight:    600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color:         TYPE_COLORS[si.content_type] ?? 'var(--text-secondary)',
+                  marginBottom:  '0.25rem',
+                }}>
+                  {si.content_type}
+                </div>
+                <div style={{
+                  fontFamily:      'var(--font-display), Barlow Condensed, sans-serif',
+                  fontSize:        '0.9375rem',
+                  fontWeight:      700,
+                  lineHeight:      1.15,
+                  color:           'var(--text-primary)',
+                  display:         '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow:        'hidden',
+                }}>
+                  {si.title}
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
 }
 
 /* DownloadIcon is still used by <AttachmentRow>; the share/copy/check icons

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { toast } from '@/lib/toast'
 
 export interface PendingAttachment {
   id:           string                                  // temp client-side id
@@ -53,7 +54,7 @@ export default function AttachmentsPanel({ attachments, onChange }: AttachmentsP
     const accepted: PendingAttachment[] = []
     Array.from(files).forEach(file => {
       if (file.size > MAX_BYTES) {
-        alert(`${file.name} is over 20 MB`)
+        toast.error(`${file.name} is over 20 MB`)
         return
       }
       accepted.push({

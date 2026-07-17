@@ -13,8 +13,11 @@ import { TableCell    }                 from '@tiptap/extension-table-cell'
 import { TableHeader   }                from '@tiptap/extension-table-header'
 import { TaskList      }                from '@tiptap/extension-task-list'
 import { TaskItem      }                from '@tiptap/extension-task-item'
+import { TextStyle     }                from '@tiptap/extension-text-style'
 
 import { Scripture }       from './extensions/scripture'
+import { FontSize }        from './extensions/font-size'
+import { LineHeight }      from './extensions/line-height'
 import { EditorToolbar }   from './EditorToolbar'
 
 import './editor.css'
@@ -63,6 +66,9 @@ export default function RichEditor({
       TableHeader,
       TaskList,
       TaskItem.configure({ nested: true }),
+      TextStyle,
+      FontSize,
+      LineHeight,
       Scripture,
     ],
     content: initialHtml ?? '',

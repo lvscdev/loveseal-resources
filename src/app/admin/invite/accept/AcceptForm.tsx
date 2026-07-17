@@ -3,14 +3,17 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import ButtonSpinner from '@/components/ui/ButtonSpinner'
+import Spinner from '@/components/ui/Spinner'
+import { toast } from '@/lib/toast'
 
 export default function AcceptForm() {
   const router = useRouter()
   const [password, setPassword]       = useState('')
   const [confirmPwd, setConfirmPwd]   = useState('')
-  const [error, setError]             = useState<string | null>(null)
   const [loading, setLoading]         = useState(false)
   const [sessionReady, setSessionReady] = useState(false)
+  const [linkInvalid, setLinkInvalid] = useState(false)
   const [userEmail, setUserEmail]     = useState<string | null>(null)
 
   // On mount: Supabase auto-detects the magic-link tokens from the URL hash
@@ -32,10 +35,10 @@ export default function AcceptForm() {
             subscription.unsubscribe()
           }
         })
-        // Give it a moment then surface an error if nothing happens
+        // Give it a moment then surface a fatal error if nothing happens
         setTimeout(() => {
           if (!sessionReady) {
-            setError('This invite link is invalid or has expired. Ask a super-admin to resend it.')
+            setLinkInvalid(true)
           }
         }, 2500)
       }
@@ -45,24 +48,31 @@ export default function AcceptForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError(null)
 
     if (password.length < 8) {
-      setError('Password must be at least 8 characters')
+      toast.error('Password too short', {
+        description: 'Must be at least 8 characters.',
+      })
       return
     }
     if (password !== confirmPwd) {
-      setError('Passwords do not match')
+      toast.error('Passwords do not match', {
+        description: 'Re-type both to be sure.',
+      })
       return
     }
 
     setLoading(true)
+    const toastId = toast.loading('Setting up your account…')
     const supabase = createClient()
 
     // Set the password
     const { error: updateErr, data: { user } } = await supabase.auth.updateUser({ password })
     if (updateErr || !user) {
-      setError(updateErr?.message ?? 'Failed to set password')
+      toast.error('Failed to set password', {
+        id: toastId,
+        description: updateErr?.message ?? 'Please try again or ask for a fresh invite.',
+      })
       setLoading(false)
       return
     }
@@ -73,38 +83,49 @@ export default function AcceptForm() {
       .update({ accepted_at: new Date().toISOString() } as never)
       .eq('id', user.id))
 
+    toast.success('Welcome to the team', {
+      id: toastId,
+      description: 'You can now use the admin dashboard.',
+    })
+
     router.push('/admin')
     router.refresh()
   }
 
-  if (!sessionReady && !error) {
+  /* ── Pre-render states ─────────────────────────────────────────────── */
+  if (!sessionReady && !linkInvalid) {
     return (
       <div style={{
-        padding: '20px',
+        padding: '1.25rem',
         background: 'var(--bg-raised)',
-        border: '0.5px solid var(--border-subtle)',
-        borderRadius: '8px',
-        fontSize: '13px',
+        border: '0.03125rem solid var(--border-subtle)',
+        borderRadius: '0.5rem',
+        fontSize: '0.8125rem',
         color: 'var(--text-tertiary)',
         textAlign: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '0.75rem',
       }}>
-        Verifying invite link…
+        <Spinner size="md" />
+        <span>Verifying invite link…</span>
       </div>
     )
   }
 
-  if (error && !sessionReady) {
+  if (linkInvalid) {
     return (
       <div style={{
-        padding: '14px 16px',
+        padding: '0.875rem 1rem',
         background: 'var(--danger-bg)',
-        border: '0.5px solid var(--danger-border)',
-        borderRadius: '8px',
-        fontSize: '13px',
+        border: '0.03125rem solid var(--danger-border)',
+        borderRadius: '0.5rem',
+        fontSize: '0.8125rem',
         color: 'var(--danger-fg)',
         lineHeight: 1.5,
       }}>
-        {error}
+        This invite link is invalid or has expired. Ask a super-admin to resend it.
       </div>
     )
   }
@@ -113,19 +134,19 @@ export default function AcceptForm() {
     <form onSubmit={handleSubmit}>
       {userEmail && (
         <div style={{
-          padding: '10px 14px',
+          padding: '0.625rem 0.875rem',
           background: 'var(--bg-elevated)',
-          border: '0.5px solid var(--border-subtle)',
-          borderRadius: '7px',
-          fontSize: '12px',
+          border: '0.03125rem solid var(--border-subtle)',
+          borderRadius: '0.4375rem',
+          fontSize: '0.75rem',
           color: 'var(--text-secondary)',
-          marginBottom: '16px',
+          marginBottom: '1rem',
         }}>
           Setting up account for <strong style={{ color: 'var(--text-primary)' }}>{userEmail}</strong>
         </div>
       )}
 
-      <div style={{ marginBottom: '12px' }}>
+      <div style={{ marginBottom: '0.75rem' }}>
         <label style={labelStyle}>Password</label>
         <input
           type="password"
@@ -139,7 +160,7 @@ export default function AcceptForm() {
         />
       </div>
 
-      <div style={{ marginBottom: '16px' }}>
+      <div style={{ marginBottom: '1rem' }}>
         <label style={labelStyle}>Confirm password</label>
         <input
           type="password"
@@ -152,37 +173,27 @@ export default function AcceptForm() {
         />
       </div>
 
-      {error && (
-        <div style={{
-          padding: '10px 12px',
-          background: 'var(--danger-bg)',
-          border: '0.5px solid var(--danger-border)',
-          borderRadius: '6px',
-          fontSize: '12px',
-          color: 'var(--danger-fg)',
-          marginBottom: '14px',
-        }}>
-          {error}
-        </div>
-      )}
-
       <button
         type="submit"
         disabled={loading}
         style={{
-          width: '100%',
-          padding: '11px',
-          background: loading ? 'var(--bg-elevated)' : 'var(--brand-gold)',
-          color: loading ? 'var(--text-muted)' : 'var(--text-inverse)',
-          border: 'none',
-          borderRadius: '8px',
-          fontSize: '13px',
-          fontWeight: 500,
-          cursor: loading ? 'not-allowed' : 'pointer',
-          fontFamily: 'var(--font-body)',
+          width:        '100%',
+          padding:      '0.6875rem',
+          background:   loading ? 'var(--bg-elevated)' : 'var(--brand-gold)',
+          color:        loading ? 'var(--text-muted)' : 'var(--text-inverse)',
+          border:       'none',
+          borderRadius: '0.5rem',
+          fontSize:     '0.8125rem',
+          fontWeight:   500,
+          cursor:       loading ? 'not-allowed' : 'pointer',
+          fontFamily:   'var(--font-body)',
+          display:      'inline-flex',
+          alignItems:   'center',
+          justifyContent: 'center',
+          minHeight:    '2.625rem',
         }}
       >
-        {loading ? 'Setting up…' : 'Activate account'}
+        {loading ? <ButtonSpinner label="Setting up…" inverse /> : 'Activate account'}
       </button>
     </form>
   )
@@ -190,21 +201,21 @@ export default function AcceptForm() {
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: '12px',
+  fontSize: '0.75rem',
   fontWeight: 500,
   color: 'var(--text-tertiary)',
-  marginBottom: '6px',
+  marginBottom: '0.375rem',
   letterSpacing: '0.04em',
 }
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  padding: '10px 14px',
+  padding: '0.625rem 0.875rem',
   background: 'var(--bg-input)',
-  border: '0.5px solid var(--border-strong)',
-  borderRadius: '7px',
+  border: '0.03125rem solid var(--border-strong)',
+  borderRadius: '0.4375rem',
   color: 'var(--text-primary)',
-  fontSize: '14px',
+  fontSize: '0.875rem',
   fontFamily: 'var(--font-body)',
   outline: 'none',
 }

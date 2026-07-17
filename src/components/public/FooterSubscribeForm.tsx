@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 /**
  * Subscribe-by-email control for the public footer.
@@ -20,11 +20,12 @@ import { useTranslations } from 'next-intl'
  * a11y) should not need to change.
  */
 export default function FooterSubscribeForm() {
-  const t = useTranslations('footer.subscribe')
+  const t      = useTranslations('footer.subscribe')
+  const locale = useLocale()
 
   const [open,    setOpen]    = useState(false)
   const [email,   setEmail]   = useState('')
-  const [status,  setStatus]  = useState<'idle' | 'success'>('idle')
+  const [status,  setStatus]  = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const inputRef = useRef<HTMLInputElement | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -42,19 +43,31 @@ export default function FooterSubscribeForm() {
     }
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email.trim()) return
-    /* No backend in Pass 2. Replace this with a real POST when the
-       subscribers phase lands. */
-    // eslint-disable-next-line no-console
-    console.log('[footer/subscribe] captured email:', email.trim())
-    setStatus('success')
-    setEmail('')
-    timerRef.current = setTimeout(() => {
-      setStatus('idle')
-      setOpen(false)
-    }, 2500)
+    if (!email.trim() || status === 'loading') return
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), locale }),
+      })
+      if (res.ok) {
+        setStatus('success')
+        setEmail('')
+        timerRef.current = setTimeout(() => {
+          setStatus('idle')
+          setOpen(false)
+        }, 2500)
+      } else {
+        setStatus('error')
+        timerRef.current = setTimeout(() => setStatus('idle'), 3000)
+      }
+    } catch {
+      setStatus('error')
+      timerRef.current = setTimeout(() => setStatus('idle'), 3000)
+    }
   }
 
   /* Collapsed: pill button. */
@@ -97,6 +110,20 @@ export default function FooterSubscribeForm() {
         >
           {t('success')}
         </span>
+      ) : status === 'error' ? (
+        <span
+          style={{
+            fontSize:   '0.875rem',
+            fontWeight: 500,
+            color:      'var(--brand-red, #C32126)',
+            padding:    '0.75rem 1.375rem',
+            background: 'rgba(195, 33, 38, 0.1)',
+            borderRadius: '999rem',
+          }}
+          role="alert"
+        >
+          Something went wrong — please try again.
+        </span>
       ) : (
         <form
           onSubmit={handleSubmit}
@@ -132,10 +159,11 @@ export default function FooterSubscribeForm() {
           />
           <button
             type="submit"
-            style={pillRedStyle}
+            disabled={status === 'loading'}
+            style={{ ...pillRedStyle, opacity: status === 'loading' ? 0.6 : 1 }}
             aria-label={t('submit')}
           >
-            {t('submit')}
+            {status === 'loading' ? '…' : t('submit')}
           </button>
         </form>
       )}

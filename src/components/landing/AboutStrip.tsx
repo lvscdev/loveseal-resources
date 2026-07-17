@@ -13,17 +13,20 @@ export default function AboutStrip() {
          padding from --page-inline-padding so the section's edges align
          with the rest of the site chrome below the cap; on viewports
          wider than 1280px the side margin grows naturally. */
-      maxWidth: 'var(--width-content)',
+      maxWidth: 'var(--width-site)',
       margin:   '0 auto',
       padding:  '5rem var(--page-inline-padding)',
     }}>
-      <div style={{
-        background: 'var(--bg-raised)',
-        border: '0.5px solid var(--border-subtle)',
-        borderRadius: '20px',
+      <div className="about-grid" style={{
+        background: 'var(--bg-elevated, #F5F5F5)',
+        borderRadius: '1.75rem',
         padding: 'clamp(36px, 6vw, 72px)',
         position: 'relative',
         overflow: 'hidden',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 'clamp(2rem, 5vw, 3.5rem)',
+        alignItems: 'center',
       }}>
         {/* Background accent */}
         <div style={{
@@ -32,79 +35,81 @@ export default function AboutStrip() {
           insetInlineEnd: '-80px',
           width: '320px',
           height: '320px',
-          background: 'var(--brand-gold)',
-          opacity: 0.06,
+          background: 'var(--brand-red)',
+          opacity: 0.04,
           borderRadius: '50%',
           pointerEvents: 'none',
         }} />
 
-        <RevealOnScroll>
-          <p style={{
-            fontSize: '11px',
-            fontWeight: 500,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: 'var(--brand-gold)',
-            marginBottom: '20px',
-          }}>
-            {t('eyebrow')}
-          </p>
-        </RevealOnScroll>
+        {/* LEFT — eyebrow + headline */}
+        <div>
+          <RevealOnScroll>
+            <p style={{
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: 'var(--brand-red)',
+              marginBottom: '20px',
+            }}>
+              {t('eyebrow')}
+            </p>
+          </RevealOnScroll>
 
-        <RevealOnScroll delay={0.05}>
-          <p style={{
-            fontFamily: 'var(--font-display), Barlow Condensed, sans-serif',
-            fontSize: 'clamp(28px, 4.4vw, 48px)',
-            fontWeight: 700,
-            lineHeight: 1.1,
-            textTransform: 'uppercase',
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.015em',
-            marginBottom: '24px',
-            /* Component-local headline cap (~900px). Not promoted to a
-               global token because no other component shares this need;
-               adding `--width-headline` for a single consumer is overkill. */
-            maxWidth: '56.25rem',
-          }}>
-            {t.rich('headline', {
-              /* next-intl v4: rich-tag callbacks receive the inner content
-                 as `chunks` and must wrap it. The message uses
-                 <highlight>…</highlight> as a rich-text tag. */
-              highlight: (chunks) => (
-                <span style={{ color: 'var(--brand-gold)' }}>{chunks}</span>
-              ),
-            })}
-          </p>
-        </RevealOnScroll>
+          <RevealOnScroll delay={0.05}>
+            <p style={{
+              fontFamily: 'var(--font-display), Barlow Condensed, sans-serif',
+              fontSize: 'clamp(28px, 4.4vw, 64px)',
+              fontWeight: 800,
+              lineHeight: 1.0,
+              textTransform: 'uppercase',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.012em',
+              margin: 0,
+            }}>
+              {t.rich('headline', {
+                highlight: (chunks) => (
+                  <span style={{ color: 'var(--brand-red)' }}>{chunks}</span>
+                ),
+              })}
+            </p>
+          </RevealOnScroll>
+        </div>
 
-        <RevealOnScroll delay={0.1}>
-          <p style={{
-            fontSize: '16px',
-            color: 'var(--text-secondary)',
-            lineHeight: 1.7,
-            maxWidth: 'var(--width-narrow)',
-            marginBottom: '28px',
-          }}>
-            {t('body', { parent: BRAND.parent })}
-          </p>
-        </RevealOnScroll>
+        {/* RIGHT — body copy + stats */}
+        <div>
+          <RevealOnScroll delay={0.1}>
+            <p style={{
+              fontSize: '17px',
+              color: 'var(--text-primary)',
+              lineHeight: 1.55,
+              maxWidth: '31.25rem',
+              marginBottom: '2rem',
+            }}>
+              {t('body', { parent: BRAND.parent })}
+            </p>
+          </RevealOnScroll>
 
-        <RevealOnScroll delay={0.15}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-            gap: '24px',
-            marginTop: '40px',
-            paddingTop: '32px',
-            borderTop: '0.5px solid var(--border-subtle)',
-          }}>
-            <ValueStat number="4" label={t('stats.types')} />
-            <ValueStat number="5" label={t('stats.languages')} />
-            <ValueStat number="∞" label={t('stats.readable')} />
-            <ValueStat number="0" label={t('stats.cost')} />
-          </div>
-        </RevealOnScroll>
+          <RevealOnScroll delay={0.15}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '18px',
+            }}>
+              <ValueStat number="4"  label={t('stats.types')} />
+              <ValueStat number="5"  label={t('stats.languages')} />
+              <ValueStat number="100%" label={t('stats.readable')} />
+              <ValueStat number="$0" label={t('stats.cost')} />
+            </div>
+          </RevealOnScroll>
+        </div>
       </div>
+
+      <style>{`
+        @media (max-width: 48rem) {
+          .about-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   )
 }
@@ -114,21 +119,21 @@ function ValueStat({ number, label }: { number: string; label: string }) {
     <div>
       <div style={{
         fontFamily: 'var(--font-display), Barlow Condensed, sans-serif',
-        fontSize: 'clamp(36px, 5vw, 56px)',
-        fontWeight: 900,
-        color: 'var(--brand-gold)',
+        fontSize: 'clamp(2rem, 3.5vw, 2.375rem)',
+        fontWeight: 800,
+        color: 'var(--text-primary)',
         lineHeight: 1,
-        marginBottom: '6px',
+        marginBottom: '4px',
         letterSpacing: '-0.02em',
       }}>
         {number}
       </div>
       <div style={{
         fontSize: '11px',
-        fontWeight: 500,
-        letterSpacing: '0.1em',
+        fontWeight: 600,
+        letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        color: 'var(--text-tertiary)',
+        color: 'var(--text-secondary)',
       }}>
         {label}
       </div>

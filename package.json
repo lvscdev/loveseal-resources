@@ -6,10 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "verify": "npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
+    "@google-analytics/data": "^6.1.0",
+    "@next/third-parties": "^16.2.9",
     "@supabase/ssr": "^0.6.0",
     "@supabase/supabase-js": "^2.49.0",
     "@tiptap/extension-character-count": "^3.22.5",
@@ -22,17 +28,20 @@
     "@tiptap/extension-table-row": "^3.22.5",
     "@tiptap/extension-task-item": "^3.22.5",
     "@tiptap/extension-task-list": "^3.22.5",
+    "@tiptap/extension-text-style": "^3.22.5",
     "@tiptap/extension-underline": "^3.22.5",
     "@tiptap/pm": "^3.22.5",
     "@tiptap/react": "^3.22.5",
     "@tiptap/starter-kit": "^3.22.5",
     "clsx": "^2.1.1",
     "framer-motion": "^12.0.0",
-    "next": "^15.3.0",
+    "next": "^16.2.6",
     "next-intl": "^4.0.0",
     "pdfjs-dist": "^4.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.12.4",
+    "sonner": "^1.7.4",
     "tailwind-merge": "^3.0.0"
   },
   "devDependencies": {
@@ -42,9 +51,11 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^9.0.0",
     "eslint-config-next": "^15.3.0",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
   }
 }

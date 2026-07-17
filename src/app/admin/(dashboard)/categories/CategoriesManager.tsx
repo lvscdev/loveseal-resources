@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createCategory, renameCategory, deleteCategory } from './actions'
 import type { ContentType } from '@/types'
 import type { CategoryWithCount } from './page'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 const TYPE_GROUPS: { key: ContentType | 'all'; label: string; color: string }[] = [
   { key: 'all',      label: 'All content types',  color: 'var(--text-tertiary)' },
@@ -30,6 +31,9 @@ export default function CategoriesManager({
   // Edit state
   const [editingId, setEditingId]   = useState<string | null>(null)
   const [editName, setEditName]     = useState('')
+
+  // Delete confirmation state
+  const [deleteTarget, setDeleteTarget] = useState<CategoryWithCount | null>(null)
 
   const grouped = useMemo(() => {
     const map: Record<string, CategoryWithCount[]> = {
@@ -77,25 +81,21 @@ export default function CategoriesManager({
     router.refresh()
   }
 
-  async function handleDelete(cat: CategoryWithCount) {
-    let message = `Delete category "${cat.name}"?`
-    if (cat.usage_count > 0) {
-      message = `"${cat.name}" is used by ${cat.usage_count} content item${cat.usage_count > 1 ? 's' : ''}. ` +
-                `These items will lose this category but won't be deleted. Continue?`
-    }
-    if (!confirm(message)) return
-
-    setBusy(cat.id)
+  async function confirmDelete() {
+    if (!deleteTarget) return
+    setBusy(deleteTarget.id)
     setError(null)
 
-    const result = await deleteCategory(cat.id)
+    const result = await deleteCategory(deleteTarget.id)
     if (!result.ok) {
       setError(result.error ?? 'Failed to delete')
       setBusy(null)
+      setDeleteTarget(null)
       return
     }
 
     setBusy(null)
+    setDeleteTarget(null)
     router.refresh()
   }
 
@@ -308,7 +308,7 @@ export default function CategoriesManager({
                               </button>
                               <button
                                 type="button"
-                                onClick={() => handleDelete(cat)}
+                                onClick={() => setDeleteTarget(cat)}
                                 disabled={isBusy}
                                 style={{ ...iconBtn, color: 'var(--danger-fg)' }}
                                 title="Delete"
@@ -327,6 +327,21 @@ export default function CategoriesManager({
           )
         })}
       </div>
+
+      <ConfirmModal
+        open={!!deleteTarget}
+        title="Delete category"
+        message={
+          deleteTarget && deleteTarget.usage_count > 0
+            ? `"${deleteTarget.name}" is used by ${deleteTarget.usage_count} content item${deleteTarget.usage_count > 1 ? 's' : ''}. These items will lose this category but won't be deleted. Continue?`
+            : `Delete category "${deleteTarget?.name}"?`
+        }
+        confirmLabel="Delete"
+        danger
+        busy={busy === deleteTarget?.id}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }

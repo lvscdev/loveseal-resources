@@ -1,48 +1,52 @@
 {
   "brand": {
-    "byline": "بواسطة LoveSeal Church",
+    "byline": "من LoveSeal Church",
     "shortName": "Lively Resources",
     "parent": "LoveSeal Church"
   },
   "meta": {
-    "homeTitle": "أدلة، نبوءات، مقالات ومدوّنة"
+    "homeTitle": "أدلّة، نبوءات، مقالات ومدوّنة"
   },
   "manifest": {
     "name": "Lively Resources — LoveSeal Church",
     "shortName": "Lively Resources",
-    "description": "أدلة ونبوءات ومقالات ومدوّنة من LoveSeal Church."
+    "description": "أدلّة، نبوءات، مقالات ومدوّنة من LoveSeal Church."
   },
   "nav": {
     "home": "الرئيسية",
-    "whatsNew": "الجديد",
-    "all": "الكل",
-    "manuals": "أدلة",
-    "prophecies": "نبوءات",
-    "articles": "مقالات",
-    "blog": "المدونة",
-    "search": "البحث في المحتوى",
-    "menu": "افتح القائمة",
+    "whatsNew": "ما الجديد",
+    "all": "الكلّ",
+    "manuals": "الأدلّة",
+    "prophecies": "النبوءات",
+    "articles": "المقالات",
+    "blog": "المدوّنة",
+    "search": "ابحث في المحتوى",
+    "menu": "فتح القائمة",
     "close": "إغلاق",
     "signin": "تسجيل الدخول"
   },
   "hero": {
-    "viewAllLatest": "عرض كل الجديد",
+    "viewAllLatest": "اعرض كل الجديد",
     "drag": "اسحب",
-    "empty": "لم يُنشر محتوى بعد. عُد قريبًا.",
+    "empty": "لا يوجد محتوى منشور بعد. عُد إلينا قريبًا.",
     "peace": {
       "line1": "السلام",
-      "line2": "معك.",
-      "subline": "هذا ما يتحرّك في الجسد اليوم — وما تأخذه إلى مخدع صلاتك."
+      "line2a": "معك.",
+      "line2b": "",
+      "subline": "هذا ما يتحرّك اليوم في جسد المسيح — وما يمكنك أخذه إلى مخدع صلاتك."
     }
   },
   "featured": {
-    "title": "أبرز ما في هذا الأسبوع",
-    "allContent": "كل المحتوى"
+    "title": "المختار هذا الأسبوع",
+    "allContent": "كل المحتوى",
+    "handpicked": "اختيار فريق التحرير",
+    "chapters": "{count, plural, =0 {لا فصول} =1 {فصل واحد} =2 {فصلان} few {# فصول} many {# فصلًا} other {# فصل}}",
+    "readTime": "{count, plural, =0 {لا دقائق قراءة} =1 {دقيقة قراءة} =2 {دقيقتا قراءة} few {# دقائق قراءة} many {# دقيقة قراءة} other {# دقيقة قراءة}}"
   },
   "about": {
-    "eyebrow": "من نحن",
-    "headline": "مكتبة من <highlight>الحقيقة</highlight>، مُعدّة ببساطة لكل موسم من مواسم الإيمان.",
-    "body": "من {parent} — أدلة عن التلمذة، كلمات نبوية لجسد المسيح، مقالات عن الإيمان والحياة، ومدونة تعليمية مستمرة. كل كلمة قابلة للمشاركة، بأي لغة، على أي جهاز.",
+    "eyebrow": "عن",
+    "headline": "مكتبة من <highlight>الحقّ</highlight>، مرتّبة ببساطة لكلّ موسم من مواسم الإيمان.",
+    "body": "من {parent} — أدلّة عن التلمذة، كلمات نبوّية لجسد المسيح، مقالات في الإيمان والحياة، ومدوّنة تعليم ثابتة. كلّ كلمة مُعدّة للمشاركة، بأيّ لغة، على أيّ جهاز.",
     "stats": {
       "types": "أنواع المحتوى",
       "languages": "اللغات",
@@ -51,39 +55,41 @@
     }
   },
   "sections": {
-    "manuals": "أدلة",
-    "prophecies": "نبوءات",
-    "articles": "مقالات",
-    "blog": "المدونة",
-    "viewAll": "عرض الكل",
-    "latest": "{type} الأحدث",
+    "manuals": "الأدلّة",
+    "prophecies": "النبوءات",
+    "articles": "المقالات",
+    "blog": "المدوّنة",
+    "viewAll": "عرض الكلّ",
+    "latest": "أحدث {type}",
+    "entries": "{count, plural, =0 {لا إدخالات} =1 {إدخال واحد} =2 {إدخالان} few {# إدخالات} many {# إدخالًا} other {# إدخال}}",
     "inFocus": {
-      "label": "في البؤرة هذا الأسبوع"
+      "label": "في دائرة الضوء هذا الأسبوع"
     },
     "joinUs": "انضمّ إلينا"
   },
   "library": {
     "eyebrow": "المكتبة",
     "title": "كل المحتوى",
-    "itemsCount": "{count, plural, =0 {لا توجد عناصر} =1 {عنصر واحد} other {# عنصرًا}} متاح"
+    "itemsCount": "{count, plural, =0 {لا توجد عناصر} =1 {عنصر واحد} =2 {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}} متاح",
+    "body": "أدلة ونبوءات ومقالات ومنشورات مدونة من كنيسة لوف سيل — مكتبة حية لجسد المسيح."
   },
   "filters": {
-    "title": "المرشّحات",
-    "search": "ابحث في العنوان والموضوع والآيات…",
+    "title": "الفلاتر",
+    "search": "ابحث في العنوان، الموضوع، الآيات…",
     "type": "النوع",
     "theme": "الموضوع",
-    "speaker": "المتحدث",
+    "speaker": "المتحدّث",
     "series": "السلسلة",
-    "clearAll": "مسح الكل",
-    "showCount": "عرض {count, plural, =0 {لا عناصر} =1 {عنصر واحد} other {# عنصرًا}}",
-    "noMatches": "لا يوجد محتوى يطابق المرشحات الحالية",
-    "noContent": "لم يُنشر محتوى بعد",
-    "uploadFirst": "ارفع العنصر الأول"
+    "clearAll": "مسح الكلّ",
+    "showCount": "عرض {count, plural, =0 {لا توجد عناصر} =1 {عنصر واحد} =2 {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}",
+    "noMatches": "لا يوجد محتوى يطابق الفلاتر الحالية",
+    "noContent": "لا يوجد محتوى منشور بعد",
+    "uploadFirst": "ارفع العنصر الأوّل"
   },
   "results": {
-    "showing": "عرض",
+    "showing": "يُعرض",
     "of": "من",
-    "items": "{count, plural, =0 {عناصر} =1 {عنصر} other {عناصر}}"
+    "items": "{count, plural, =0 {عناصر} =1 {عنصر} =2 {عنصران} few {عناصر} many {عنصرًا} other {عنصر}}"
   },
   "card": {
     "viewLabel": "عرض"
@@ -93,95 +99,115 @@
       "manual": "دليل",
       "prophecy": "نبوءة",
       "article": "مقال",
-      "blog": "مدونة"
+      "blog": "تدوينة"
     },
     "lesson": "الدرس {number}",
     "minRead": "{count} دقيقة قراءة",
     "share": "مشاركة",
     "copyLink": "نسخ الرابط",
-    "linkCopied": "تم نسخ الرابط",
-    "copied": "تم النسخ",
-    "downloadPdf": "تنزيل PDF",
-    "fullText": "النص الكامل",
-    "keyPoints": "النقاط الرئيسية",
+    "linkCopied": "تمّ نسخ الرابط",
+    "copied": "تمّ النسخ",
+    "downloadPdf": "تنزيل ملف PDF",
+    "fullText": "النصّ الكامل",
+    "keyPoints": "النقاط الأساسية",
     "pdfViewer": "عارض PDF",
-    "plainText": "نص عادي",
-    "scriptureRefs": "المراجع الكتابية",
+    "plainText": "نصّ عادي",
+    "scriptureRefs": "الشواهد الكتابية",
     "tags": "الوسوم",
     "attachments": "المرفقات",
     "backToAll": "→ العودة إلى كل المحتوى",
-    "pdfUnavailable": "ملف PDF غير متاح حاليًا.",
+    "pdfUnavailable": "نص هذا المستند غير متوفر بعد.",
     "breadcrumb": {
       "home": "الرئيسية",
       "content": "المحتوى"
     },
-    "translatedNotice": "تمت ترجمة هذه الصفحة آليًا. قد تُفقد بعض الفروق الدقيقة.",
-    "pendingTranslationNotice": "يُعرض هذا المحتوى بلغته الأصلية ({source}). لا تتوفر ترجمة بعد."
+    "translatedNotice": "تُرجمت هذه الصفحة آليًا. قد تضيع بعض الفروق الدقيقة.",
+    "pendingTranslationNotice": "يُعرض هذا المحتوى بلغته الأصلية ({source}). لا تتوفّر ترجمة بعد.",
+    "reader": {
+      "breadcrumb": {
+        "topics": "المواضيع"
+      },
+      "toggleFull": "النص الكامل",
+      "toggleQuick": "النقاط الرئيسية",
+      "byline": {
+        "readTime": "{minutes} دقيقة قراءة"
+      },
+      "actions": {
+        "copyLink": "نسخ الرابط",
+        "copied": "تم النسخ",
+        "share": "مشاركة",
+        "downloadPdf": "تحميل PDF"
+      },
+      "quick": {
+        "pagination": "{current} من {total}",
+        "next": "التالي",
+        "prev": "السابق",
+        "readFull": "قراءة القصة كاملة",
+        "pointFallback": "نقطة {n}"
+      },
+      "related": {
+        "eyebrow": "ذات صلة",
+        "heading": "قد يعجبك أيضًا"
+      }
+    }
   },
   "topic": {
-    "_todo_translation": true,
     "eyebrow": {
-      "type": "Topic"
+      "type": "الموضوع"
     },
-    "typeBody": "Every published {type} in the library, newest first.",
-    "emptyType": "No {type} content yet. Check back soon."
+    "typeBody": "كلّ ما يُنشر من {type} في المكتبة، الأحدث أوّلًا.",
+    "emptyType": "لا يوجد محتوى من {type} بعد. عُد إلينا قريبًا."
   },
   "topics": {
-    "_todo_translation": true,
-    "eyebrow": "Browse",
-    "title": "Topics",
-    "body": "Every tag and theme used across the library. Tap one to see all the manuals, prophecies, articles, and blog posts that touch it.",
-    "tagEyebrow": "Topic",
-    "tagBody": "Everything tagged #{tag} across the library, newest first.",
-    "tagsCount": "{count, plural, =0 {no topics yet} =1 {1 topic} other {# topics}}",
-    "itemsCount": "{count, plural, =0 {no items} =1 {1 item} other {# items}}",
-    "empty": "No topics yet. Once content is published with tags, they'll appear here.",
-    "emptyTag": "No content tagged #{tag} yet."
+    "eyebrow": "تصفّح",
+    "title": "المواضيع",
+    "body": "كلّ الوسوم والمواضيع المستخدمة في المكتبة. اضغط على واحد لترى كلّ الأدلّة والنبوءات والمقالات والمنشورات التي تمسّه.",
+    "tagEyebrow": "الموضوع",
+    "tagBody": "كلّ ما يحمل الوسم #{tag} في المكتبة، الأحدث أوّلًا.",
+    "tagsCount": "{count, plural, =0 {لا توجد مواضيع بعد} =1 {موضوع واحد} =2 {موضوعان} few {# مواضيع} many {# موضوعًا} other {# موضوع}}",
+    "itemsCount": "{count, plural, =0 {لا توجد عناصر} =1 {عنصر واحد} =2 {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}",
+    "empty": "لا توجد مواضيع بعد. حين يُنشر محتوى بوسوم، ستظهر هنا.",
+    "emptyTag": "لا يوجد محتوى يحمل الوسم #{tag} بعد."
   },
   "authors": {
-    "_todo_translation": true,
-    "eyebrow": "Author",
-    "indexTitle": "Authors",
-    "indexBody": "Speakers and writers behind the manuals, prophecies, articles, and blog posts. Tap a name to see everything they've contributed.",
-    "authorsCount": "{count, plural, =0 {no authors yet} =1 {1 author} other {# authors}}",
-    "itemsCount": "{count, plural, =0 {no items} =1 {1 item} other {# items}}",
-    "empty": "No authors yet. Once content is published with attributed authors, they'll appear here.",
-    "emptyForAuthor": "{name} hasn't published anything in this category yet.",
-    "profileFallbackBody": "Content by {name}"
+    "eyebrow": "المؤلّف",
+    "indexTitle": "المؤلّفون",
+    "indexBody": "المتحدّثون والكتّاب الذين يقفون وراء الأدلّة والنبوءات والمقالات ومنشورات المدوّنة. اضغط على اسم لترى كلّ ما شاركه.",
+    "authorsCount": "{count, plural, =0 {لا يوجد مؤلّفون بعد} =1 {مؤلّف واحد} =2 {مؤلّفان} few {# مؤلّفين} many {# مؤلّفًا} other {# مؤلّف}}",
+    "itemsCount": "{count, plural, =0 {لا توجد عناصر} =1 {عنصر واحد} =2 {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}",
+    "empty": "لا يوجد مؤلّفون بعد. حين يُنشر محتوى بمؤلّفين منسوبين، سيظهرون هنا.",
+    "emptyForAuthor": "لم يُنشر بعد لـ {name} شيءٌ في هذه الفئة.",
+    "profileFallbackBody": "محتوى من {name}"
   },
   "notFound": {
     "label": "404",
     "title": "المحتوى غير موجود",
-    "body": "المحتوى الذي تبحث عنه ربما تمّ حذفه أو إلغاء نشره.",
+    "body": "ربّما تمّ حذف المحتوى الذي تبحث عنه أو إلغاء نشره.",
     "browse": "تصفّح كل المحتوى",
     "root": {
-      "_todo_translation": true,
       "label": "404",
-      "title": "Page not found",
-      "body": "The page you're looking for doesn't exist or has been moved.",
-      "home": "Go home",
-      "browse": "Browse the library"
+      "title": "الصفحة غير موجودة",
+      "body": "الصفحة التي تبحث عنها غير موجودة أو تمّ نقلها.",
+      "home": "الذهاب إلى الرئيسية",
+      "browse": "تصفّح المكتبة"
     },
     "topic": {
-      "_todo_translation": true,
       "label": "404",
-      "title": "Topic not found",
-      "body": "That isn't one of our content types. Try manuals, prophecies, articles, or blog.",
-      "browse": "Browse all content"
+      "title": "الموضوع غير موجود",
+      "body": "هذا ليس أحد أنواع المحتوى لدينا. جرّب: أدلّة، نبوءات، مقالات أو مدوّنة.",
+      "browse": "تصفّح كل المحتوى"
     },
     "tag": {
-      "_todo_translation": true,
       "label": "404",
-      "title": "Topic not found",
-      "body": "We couldn't find anything tagged with that. The tag may have been removed, or no content uses it yet.",
-      "browse": "All topics"
+      "title": "الموضوع غير موجود",
+      "body": "لم نجد شيئًا بهذا الوسم. ربّما تمّت إزالته، أو لا يوجد محتوى يستخدمه بعد.",
+      "browse": "كل المواضيع"
     },
     "author": {
-      "_todo_translation": true,
       "label": "404",
-      "title": "Author not found",
-      "body": "We couldn't find an author at that link. They may have been removed, or the URL might be mistyped.",
-      "browse": "All authors"
+      "title": "المؤلّف غير موجود",
+      "body": "لم نجد مؤلّفًا عند هذا الرابط. ربّما تمّت إزالته، أو أنّ الرابط مكتوب بشكل غير صحيح.",
+      "browse": "كل المؤلّفين"
     }
   },
   "footer": {
@@ -189,35 +215,35 @@
     "display": {
       "read": "اقرأ.",
       "share": "شارك.",
-      "multiply": "انشُر."
+      "multiply": "اضرب."
     },
-    "tagline": "كلّ دليلٍ ونبوءةٍ ومقالٍ ومنشورٍ قابلٌ للمشاركة بلمسةٍ واحدة. أرسل الحقّ إلى من يحتاجه — بخمس لغاتٍ، على أيّ جهاز، متّصلاً كنت أم لا.",
+    "tagline": "كلّ دليل، نبوءة، مقال ومنشور قابل للمشاركة بلمسة واحدة. أوصِل الحقّ إلى من يحتاجه — بخمس لغات، على أيّ جهاز، متصلًا أو من دون اتصال.",
     "cta": {
       "browse": "تصفّح المكتبة"
     },
     "subscribe": {
-      "button": "اشترك بالبريد الإلكتروني",
-      "placeholder": "بريدك@الإلكتروني.com",
-      "submit": "اشترك",
-      "success": "شكراً — سنتواصل معك قريباً."
+      "button": "اشترك عبر البريد الإلكتروني",
+      "placeholder": "بريدك@example.com",
+      "submit": "اشتراك",
+      "success": "شكرًا — سنتواصل معك قريبًا."
     },
     "columns": {
       "content": "المحتوى",
       "browse": "تصفّح",
-      "about": "نبذة"
+      "about": "عن"
     },
     "links": {
-      "manuals": "أدلة",
-      "prophecies": "نبوءات",
-      "articles": "مقالات",
-      "blog": "المدونة",
+      "manuals": "الأدلّة",
+      "prophecies": "النبوءات",
+      "articles": "المقالات",
+      "blog": "المدوّنة",
       "allContent": "كل المحتوى",
       "latest": "الأحدث",
       "topics": "المواضيع",
-      "authors": "المؤلفون",
-      "loveseal": "كنيسة لوف سيل",
+      "authors": "المؤلّفون",
+      "loveseal": "LoveSeal Church",
       "story": "قصّتنا",
-      "contact": "اتصل بنا",
+      "contact": "تواصل",
       "give": "تبرّع"
     },
     "joinUs": "انضمّ إلينا",
@@ -230,7 +256,7 @@
   },
   "offline": {
     "eyebrow": "لا يوجد اتصال",
-    "title": "أنت دون اتصال",
-    "body": "تحقق من اتصالك بالإنترنت وحاول مرة أخرى. الصفحات التي قرأتها من قبل ينبغي أن تبقى متاحة."
+    "title": "أنت خارج الاتّصال",
+    "body": "تحقّق من اتصالك بالإنترنت وحاول مرة أخرى. الصفحات التي قرأتها سابقًا ينبغي أن تبقى متاحة."
   }
 }

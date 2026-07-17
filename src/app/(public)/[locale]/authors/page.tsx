@@ -16,8 +16,9 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'authors' })
   return {
-    title:      t('indexTitle'),
-    alternates: metadataAlternates(locale, '/authors'),
+    title:       t('indexTitle'),
+    description: t('indexBody'),
+    alternates:  metadataAlternates(locale, '/authors'),
   }
 }
 

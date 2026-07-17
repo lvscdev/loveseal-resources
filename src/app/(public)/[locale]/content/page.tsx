@@ -15,8 +15,9 @@ export async function generateMetadata({
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'library' })
   return {
-    title:      t('title'),
-    alternates: metadataAlternates(locale, '/content'),
+    title:       t('title'),
+    description: t('body'),
+    alternates:  metadataAlternates(locale, '/content'),
   }
 }
 
@@ -35,12 +36,12 @@ export default async function PublicContentPage({
   const { data } = await supabase
     .from('content')
     .select(`
-      id, title, content_type, language, category, tags,
+      id, slug, title, content_type, language, category, tags,
       theme, lesson_number, speaker, series, date_preached, scripture_refs,
-      cover_image_url, summary_points, created_at
+      cover_image_url, summary_points, published_at
     `)
     .eq('status', 'published')
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false })
 
   const items = (data ?? []) as Parameters<typeof PublicContentList>[0]['items']
 

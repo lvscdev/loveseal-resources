@@ -35,6 +35,24 @@ const HONORIFICS = new Set([
  *   "Femi Olawale"      → "femi-olawale"
  *   ""                  → ""  (caller decides what to do with empty)
  */
+/**
+ * Convert a content title into a URL-safe slug.
+ *
+ *   "God's Harvest in Coming Days" → "gods-harvest-in-coming-days"
+ *   "Vision: The Latter Times!"    → "vision-the-latter-times"
+ */
+export function slugify(text: string): string {
+  return text
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')  // strip diacritics
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, ' ')   // non-alphanum → space
+    .trim()
+    .replace(/[\s-]+/g, '-')          // whitespace / hyphens → single hyphen
+    .replace(/^-|-$/g, '')            // trim edge hyphens
+    .slice(0, 100)
+}
+
 export function slugifyAuthorName(name: string | null | undefined): string {
   if (!name) return ''
   const trimmed = name.trim()

@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { routing } from '@/i18n/routing'
 import { localeUrl } from '@/lib/locale-urls'
 
+export const revalidate = 3600
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient()
 
